@@ -3,6 +3,8 @@ package org.bombermen.controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bombermen.services.GameService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,18 +22,18 @@ import java.util.Map;
 @Controller
 @CrossOrigin(origins = "*")
 public class MatchMakerController {
+    private static final Logger logger = LoggerFactory.getLogger(MatchMakerController.class);
+    private final GameService gameService = GameService.getInstance();
 
-    private final GameService gameService;
-
-    public MatchMakerController() {
-        this.gameService = GameService.getInstance();
-    }
+//    public MatchMakerController() {
+//        this.gameService = GameService.getInstance();
+//    }
 
     @PostMapping(value="/matchmaker/join", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public String getGameId(@RequestParam HashMap<String, String> data) throws IOException {
-        System.out.println(data);
+        logger.debug("In controller");
         String gameID = gameService.create(data.get("name"));
         return gameID;
     }
