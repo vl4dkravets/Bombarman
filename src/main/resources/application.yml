@@ -1,0 +1,3 @@
+server:
+  port: ${appPort:8080}
+  additionalPorts: 8090
