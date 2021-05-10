@@ -1,9 +1,9 @@
 var ClusterSetting = function () {
     this.gameServer = {
-        protocol: 'ws',
+        protocol: 'wss',
         //host: 'localhost',
         host: 'dry-meadow-58892.herokuapp.com',
-        port: '8090',
+        port: '',
         path: '/events/connect'
     };
 
