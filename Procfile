@@ -1,0 +1,1 @@
+JAVA_TOOL_OPTIONS: -XX:+UseParallelGC -Xms640m -Xmx640m -XX:CICompilerCount=2 -Dfile.encoding=UTF-8 -verbose.gc
