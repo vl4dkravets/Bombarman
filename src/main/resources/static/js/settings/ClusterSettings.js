@@ -12,7 +12,8 @@ var ClusterSetting = function () {
         protocol: 'https',
         //host: 'localhost',
         host: 'dry-meadow-58892.herokuapp.com',
-        port: '8080',
+        //port: '8080',
+        port: '',
         path: '/matchmaker/join'
     };
 };
