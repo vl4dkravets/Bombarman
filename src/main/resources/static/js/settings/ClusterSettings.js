@@ -2,7 +2,7 @@ var ClusterSetting = function () {
     this.gameServer = {
         protocol: 'wss',
         //host: 'localhost',
-        host: 'dry-meadow-58892.herokuapp.com',
+        host: 'bomberman-by-vlad.herokuapp.com',
         port: '',
         path: '/events/connect'
     };
@@ -11,7 +11,7 @@ var ClusterSetting = function () {
         //protocol: 'http',
         protocol: 'https',
         //host: 'localhost',
-        host: 'dry-meadow-58892.herokuapp.com',
+        host: 'bomberman-by-vlad.herokuapp.com',
         //port: '8080',
         port: '',
         path: '/matchmaker/join'
