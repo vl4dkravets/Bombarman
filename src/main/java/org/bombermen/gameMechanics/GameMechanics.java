@@ -308,8 +308,10 @@ public class GameMechanics implements Tickable, Comparable {
     }
 
     private boolean checkIfPawnDidntStuck(double currentX, double currentY, Pawn currentPawn) {
-        Position currPos_TopLeft = new Position(currentX,currentY+ currentPawn.getTileSize());
-        Position currPos_BottomRight = new Position(currentX+currentPawn.getTileSize(),currentY);
+//        Position currPos_TopLeft = new Position(currentX,currentY+ currentPawn.getTileSize());
+//        Position currPos_BottomRight = new Position(currentX+currentPawn.getTileSize(),currentY);
+        Position currPos_TopLeft = new Position(currentX,currentY+ 32);
+        Position currPos_BottomRight = new Position(currentX+32,currentY);
 
         // first, check against game filed bounds
         //if(currentX > GAME_FIELD_W || currentY > GAME_FIELD_H || currentX < 5 || currentY < 5) { return false; }

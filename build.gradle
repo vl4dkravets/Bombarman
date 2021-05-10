@@ -44,6 +44,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.jetbrains/annotations
     implementation group: 'org.jetbrains', name: 'annotations', version: '20.1.0'
 
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

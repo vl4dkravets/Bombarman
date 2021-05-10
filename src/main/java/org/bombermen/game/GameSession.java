@@ -9,11 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameSession {
     private CopyOnWriteArrayList<Message> inputQueue;
-
     private ArrayList<Player> players;
-
-    private GameMechanics gameMechanics;
-
     private final int MAX_N_OF_PLAYERS;
     private boolean gameReady;
     private String gameID;
