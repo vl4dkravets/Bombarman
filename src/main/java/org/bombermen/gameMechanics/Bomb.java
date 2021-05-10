@@ -13,7 +13,7 @@ public class Bomb extends GameElement{
     public boolean updateBombTimerAndCheck(long elapsed) {
         startTime+=elapsed;
         //System.out.println(startTime);
-        if(startTime>= 5_000){
+        if(startTime>= 10_000){
             return true;
         }
         return false;
