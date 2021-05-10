@@ -33,11 +33,19 @@ public class MatchMakerController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public String getGameId(@RequestParam HashMap<String, String> data) throws IOException {
-        logger.debug("In controller");
+        logger.debug("In controller1");
         String gameID = gameService.create(data.get("name"));
+
         return gameID;
     }
 
+    @GetMapping(value="/test")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public String test() {
+        logger.debug("In controller1");
+        return "test getting through";
+    }
 //    private String getJsonValueByKey(String dataAsString, String key) throws IOException {
 //        byte[] jsonData = dataAsString.getBytes();
 //
