@@ -23,6 +23,7 @@ public class Ticker {
             if (elapsed < FRAME_TIME) {
                 //log.info("All tick finish at {} ms", elapsed);
                 LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(FRAME_TIME - elapsed));
+                log.warn("tick ok {} ms", elapsed - FRAME_TIME);
             } else {
                 log.warn("tick lag {} ms", elapsed - FRAME_TIME);
             }

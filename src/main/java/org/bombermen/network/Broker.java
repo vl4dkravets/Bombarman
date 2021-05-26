@@ -1,6 +1,7 @@
 package org.bombermen.network;
 
 import org.bombermen.game.GameSession;
+import org.bombermen.game.Player;
 import org.bombermen.services.GameService;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -10,6 +11,8 @@ import org.springframework.web.socket.WebSocketSession;
 import org.bombermen.message.Message;
 import org.bombermen.message.Topic;
 import org.bombermen.util.JsonHelper;
+
+import java.util.ArrayList;
 
 public class Broker {
     private static final Logger log = LoggerFactory.getLogger(Broker.class);
@@ -54,6 +57,11 @@ public class Broker {
     public void broadcast(@NotNull Topic topic, @NotNull Object object) {
         String message = JsonHelper.toJson(new Message(topic, JsonHelper.toJson(object)));
         connectionPool.broadcast(message);
+    }
+
+    public void broadcast1(@NotNull Topic topic, @NotNull Object object, ArrayList<Player> players) {
+        String message = JsonHelper.toJson(new Message(topic, JsonHelper.toJson(object)));
+        connectionPool.broadcast1(message, players);
     }
 
     private String retrieveGameIdFromQuery(String query) {

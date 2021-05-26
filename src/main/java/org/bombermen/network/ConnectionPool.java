@@ -1,5 +1,6 @@
 package org.bombermen.network;
 
+import org.bombermen.game.Player;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,6 +8,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ConnectionPool {
     private static final Logger log = LoggerFactory.getLogger(ConnectionPool.class);
     private static final ConnectionPool instance = new ConnectionPool();
-    private static final int PARALLELISM_LEVEL = 4;
+    private static final int PARALLELISM_LEVEL = 2;
     private final AtomicInteger playerNumber;
 
     private final ConcurrentHashMap<WebSocketSession, String> pool;
@@ -42,6 +44,19 @@ public class ConnectionPool {
 
     public void broadcast(@NotNull String msg) {
         pool.forEachKey(PARALLELISM_LEVEL, session -> send(session, msg));
+    }
+
+    public void broadcast1(@NotNull String msg, ArrayList<Player> players) {
+        pool.forEachKey(PARALLELISM_LEVEL, session -> {
+            int i = 0;
+             for(Player p: players) {
+                 if (p.getName().equals(session.getId())) {
+                     send(session, msg);
+                     i++;
+                 }
+                 if(i > 1) break;
+             }
+        });
     }
 
     public void shutdown() {
