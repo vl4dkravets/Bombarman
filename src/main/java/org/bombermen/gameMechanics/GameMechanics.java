@@ -88,21 +88,8 @@ public class GameMechanics implements Tickable, Comparable {
                 }
             }
         }
-//        walls.add(new Wall(1,new Position(36, 250)));
-//        walls.add(new Wall(2,new Position(36, 282)));
-//        walls.add(new Wall(3,new Position(36, 314)));
-//        //walls.add(new Wall(4,new Position(68, 314)));
-//        walls.add(new Wall(5,new Position(68, 250)));
-//        walls.add(new Wall(6,new Position(100, 250)));
-//        walls.add(new Wall(7,new Position(132, 250)));
-//        walls.add(new Wall(8,new Position(132, 282)));
-//        walls.add(new Wall(9,new Position(132, 314)));
-//        walls.add(new Wall(10,new Position(100, 314)));
 
-        //woods.add(new Wood(fires.size(),new Position(100 + 32 + 2, 250 - 2)));
-
-        replica.writeReplicaWall(walls, Topic.START);
-        replica.writeReplicaWoods(woods, Topic.START);
+        replica.writeReplicaToInitializeGameField(woods, walls, Topic.START);
     }
 
     private void createPawns(){
