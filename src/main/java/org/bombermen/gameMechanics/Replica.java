@@ -38,9 +38,11 @@ public class Replica {
             bomb.setId(gameElements.indexOf(bomb));
         }
 
-        for(Player player: players) {
-            broker.send(player.getName(), topic, gameElements);
-        }
+//        for(Player player: players) {
+//            broker.send(player.getName(), topic, gameElements);
+//        }
+
+        broker.broadcast1(topic, gameElements, players);
     }
 
     public void writeReplicaToInitializeGameField(ArrayList<Wood> woods, ArrayList<Wall> walls, Topic topic) {
