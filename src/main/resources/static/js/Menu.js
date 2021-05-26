@@ -38,6 +38,7 @@ Menu.prototype.drawBackground = function () {
 };
 
 Menu.prototype.showGameOverText = function (text) {
+    text = text + "\nTo play again - press PLAY";
     var gameOverText = new createjs.Text(text, "40px Helvetica", "#ff4444");
     gameOverText.x = (gCanvas.getWidthInPixel() - gameOverText.getMeasuredWidth()) / 2;
     var shiftFromUpside = 60;
