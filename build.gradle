@@ -6,11 +6,12 @@ plugins {
 
 group = 'org.bombermen'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '8'
 
 repositories {
     mavenCentral()
 }
+
 
 dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
