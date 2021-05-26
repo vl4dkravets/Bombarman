@@ -38,13 +38,18 @@ Menu.prototype.drawBackground = function () {
 };
 
 Menu.prototype.showGameOverText = function (text) {
-    text = text + "\nTo play again - press PLAY";
     var gameOverText = new createjs.Text(text, "40px Helvetica", "#ff4444");
+    var playAgainText = new createjs.Text("To play again - press PLAY", "40px Helvetica", "#ff4444");
     gameOverText.x = (gCanvas.getWidthInPixel() - gameOverText.getMeasuredWidth()) / 2;
+    playAgainText.x = (gCanvas.getWidthInPixel() - playAgainText.getMeasuredWidth()) / 2;
     var shiftFromUpside = 60;
     gameOverText.y = shiftFromUpside;
+    // Random constant to position text on the frontend
+    playAgainText.y = 100;
     this.stage.addChild(gameOverText);
     this.elements.push(gameOverText);
+    this.stage.addChild(playAgainText);
+    this.elements.push(playAgainText);
 };
 
 Menu.prototype.drawPlayButton = function () {

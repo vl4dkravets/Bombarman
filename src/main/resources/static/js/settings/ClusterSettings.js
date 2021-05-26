@@ -1,4 +1,18 @@
 var ClusterSetting = function () {
+    this.gameServer = {
+        protocol: 'ws',
+        host: 'localhost',
+        port: '8080',
+        path: '/events/connect'
+    };
+
+    this.matchMaker = {
+        protocol: 'http',
+        host: 'localhost',
+        port: '8080',
+        path: '/matchmaker/join'
+    };
+
 //    this.gameServer = {
 //        protocol: 'wss',
 //        host: 'bomberman-by-vlad.herokuapp.com',
@@ -12,20 +26,6 @@ var ClusterSetting = function () {
 //        port: '',
 //        path: '/matchmaker/join'
 //    };
-
-        this.gameServer = {
-            protocol: 'ws',
-            host: 'localhost',
-            port: '8080',
-            path: '/events/connect'
-        };
-
-        this.matchMaker = {
-            protocol: 'http',
-            host: 'localhost',,
-            port: '8080',
-            path: '/matchmaker/join'
-        };
 };
 
 ClusterSetting.prototype.gameServerUrl = function() {
