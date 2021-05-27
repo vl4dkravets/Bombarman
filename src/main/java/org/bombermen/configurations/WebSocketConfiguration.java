@@ -1,6 +1,6 @@
 package org.bombermen.configurations;
 
-import org.bombermen.message.EventHandler;
+import org.bombermen.network.EventHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;

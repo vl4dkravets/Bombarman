@@ -1,4 +1,4 @@
-package org.bombermen.message;
+package org.bombermen.network;
 
 import org.bombermen.exceptions.InvalidGameIdException;
 import org.bombermen.network.Broker;
@@ -48,6 +48,7 @@ public class EventHandler extends TextWebSocketHandler implements WebSocketHandl
     public void afterConnectionClosed(@NotNull WebSocketSession session, CloseStatus closeStatus) throws Exception {
         System.out.println("Socket Closed: [" + closeStatus.getCode() + "] " + closeStatus.getReason());
         super.afterConnectionClosed(session, closeStatus);
+
     }
 
     private String retrieveGameIdFromQuery(String query) {
