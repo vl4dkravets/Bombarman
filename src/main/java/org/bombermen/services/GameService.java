@@ -1,5 +1,6 @@
 package org.bombermen.services;
 
+import org.bombermen.exceptions.InvalidGameIdException;
 import org.bombermen.game.GameSession;
 import org.bombermen.game.GameThread;
 import org.bombermen.tick.Ticker;
@@ -14,8 +15,8 @@ public class GameService {
 
 	private static final int MAX_N_OF_PLAYERS = 2;
 	private final ConcurrentHashMap<String, GameSession> games;
-	private AtomicInteger playersConnectedToLastCreatedSession;
-	private AtomicInteger gameSessionCounter;
+	private final AtomicInteger playersConnectedToLastCreatedSession;
+	private final AtomicInteger gameSessionCounter;
 	private String lastCreateGameID;
 	
 	private GameService() {
@@ -48,8 +49,8 @@ public class GameService {
 		return lastCreateGameID;
 	}
 	
-	public void connect(String playerName, String gameId) {
-		GameSession gameSession = null;
+	public void connect(String playerName, String gameId) throws InvalidGameIdException {
+		GameSession gameSession;
 		if(games.containsKey(gameId)) {
 			gameSession = games.get(gameId);
 			gameSession.createPlayer(playerName);
@@ -59,6 +60,7 @@ public class GameService {
 		}
 		else {
 			// throw some websocket exception to cause error on client
+			throw new InvalidGameIdException("Game with gameId " + gameId + " doesn't exists");
 		}
 	}
 

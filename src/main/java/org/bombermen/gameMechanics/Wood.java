@@ -13,6 +13,7 @@ public class Wood extends GameElement{
     public Position getTopLeftPoint() {
         return new Position(getPosition().getX() - TILE_SIZE_DIFFERENCE, getPosition().getY() + TILE_SIZE_DIFFERENCE + getTileSize());
     }
+
     @Override
     public Position getBottomRightPoint() {
         return new Position(getPosition().getX() - TILE_SIZE_DIFFERENCE + getTileSize(), getPosition().getY() + TILE_SIZE_DIFFERENCE);

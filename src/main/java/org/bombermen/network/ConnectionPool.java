@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
@@ -18,7 +17,6 @@ public class ConnectionPool {
     private static final ConnectionPool instance = new ConnectionPool();
     private static final int PARALLELISM_LEVEL = 2;
     private final AtomicInteger playerNumber;
-
     private final ConcurrentHashMap<WebSocketSession, String> pool;
 
     public static ConnectionPool getInstance() {
@@ -42,9 +40,9 @@ public class ConnectionPool {
         }
     }
 
-    public void broadcast(@NotNull String msg) {
-        pool.forEachKey(PARALLELISM_LEVEL, session -> send(session, msg));
-    }
+//    public void broadcast(@NotNull String msg) {
+//        pool.forEachKey(PARALLELISM_LEVEL, session -> send(session, msg));
+//    }
 
     public void broadcast1(@NotNull String msg, ArrayList<Player> players) {
         pool.forEachKey(PARALLELISM_LEVEL, session -> {

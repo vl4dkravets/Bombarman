@@ -6,7 +6,7 @@ public abstract class GameElement {
     private Position position;
     private boolean alive;
     private String direction;
-    private double tileSize = 28;
+    private final double tileSize = 28;
 
     public GameElement(String type, Position position) {
         this.type = type;

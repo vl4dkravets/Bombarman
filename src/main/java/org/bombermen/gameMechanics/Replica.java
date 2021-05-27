@@ -3,7 +3,6 @@ package org.bombermen.gameMechanics;
 import org.bombermen.game.Player;
 import org.bombermen.message.Topic;
 import org.bombermen.network.Broker;
-
 import java.util.ArrayList;
 
 public class Replica {
@@ -33,10 +32,10 @@ public class Replica {
         gameElements.addAll(pawns);
         gameElements.addAll(fires);
         gameElements.addAll(destroyedWoods);
-        for(Bomb bomb: bombs) {
-            gameElements.add((GameElement) bomb);
+        bombs.forEach(bomb -> {
+            gameElements.add(bomb);
             bomb.setId(gameElements.indexOf(bomb));
-        }
+        });
 
 //        for(Player player: players) {
 //            broker.send(player.getName(), topic, gameElements);
@@ -51,8 +50,6 @@ public class Replica {
         gameElements.addAll(woods);
         gameElements.addAll(walls);
 
-        for (Player player : players) {
-            broker.send(player.getName(), topic, gameElements);
-        }
+        players.forEach(player -> broker.send(player.getName(), topic, gameElements));
     }
 }

@@ -1,18 +1,16 @@
 package org.bombermen.game;
 
-import org.bombermen.gameMechanics.GameMechanics;
 import org.bombermen.message.Message;
 import org.bombermen.services.GameService;
-
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameSession {
-    private CopyOnWriteArrayList<Message> inputQueue;
-    private ArrayList<Player> players;
+    private final CopyOnWriteArrayList<Message> inputQueue;
+    private final ArrayList<Player> players;
     private final int MAX_N_OF_PLAYERS;
     private boolean gameReady;
-    private String gameID;
+    private final String gameID;
 
     public GameSession(String gameID, int numOfPlayers) {
         this.gameID = gameID;
@@ -37,7 +35,7 @@ public class GameSession {
     }
 
     public ArrayList<Message> getInputQueue() {
-        ArrayList<Message> copy = new ArrayList(inputQueue);
+        ArrayList<Message> copy = new ArrayList<>(inputQueue);
         inputQueue.clear();
         return copy;
     }

@@ -15,17 +15,17 @@ public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_W = 847 - 15;
     private final int GAME_FIELD_H = 527 - 15;
 
-    private ArrayList<Pawn> pawns;
-    private ArrayList<Player> players;
-    private ArrayList<Wall> walls;
-    private ArrayList<Wood> woods;
-    private ArrayList<Bomb> bombs;
-    private ArrayList<Fire> fires;
-    private ArrayList<Fire> firesLeft;
-    private ArrayList<Wood> destroyedWoods;
+    private final ArrayList<Pawn> pawns;
+    private final ArrayList<Player> players;
+    private final ArrayList<Wall> walls;
+    private final ArrayList<Wood> woods;
+    private final ArrayList<Bomb> bombs;
+    private final ArrayList<Fire> fires;
+    private final ArrayList<Fire> firesLeft;
+    private final ArrayList<Wood> destroyedWoods;
     private final int nOfPawns;
     private final GameSession gameSession;
-    private Replica replica;
+    private final Replica replica;
     private final int TILE_SIZE;
     private Pawn firstDeadPawn;
     private long GAME_END_PAUSE = 3000;
@@ -71,7 +71,7 @@ public class GameMechanics implements Tickable, Comparable {
                     }
 
                 }
-                else if(column % 2 == 0) {
+                else {
                     if(y==0 || y==GAME_FIELD_H) {
                         walls.add(new Wall(walls.size()+1, new Position(x, y)));
                     }
@@ -82,7 +82,7 @@ public class GameMechanics implements Tickable, Comparable {
                             }
                         }
                     }
-                    else if(row % 2 == 0) {
+                    else {
                         walls.add(new Wall(walls.size()+1, new Position(x, y)));
                     }
                 }
@@ -128,13 +128,11 @@ public class GameMechanics implements Tickable, Comparable {
             Topic topic = message.getTopic();
             String messageData = message.getData();
             String playerName = message.getPlayerName();
-            Pawn pawn = pawns.stream().filter(pawn1 -> pawn1.getPlayerName() == playerName).findFirst().get();
+            Pawn pawn = pawns.stream().filter(pawn1 -> pawn1.getPlayerName().equals(playerName)).findFirst().get();
             Position pawnPosition = pawn.getPosition();
             String direction;
 
             if(topic == Topic.PLANT_BOMB) {
-                //bombs.add(new Bomb(pawnPosition));
-                //System.out.println("bomb added");
                 Bomb bomb = pawn.getBomb();
                 bomb.setPosition(new Position(bomb.getPosition().getX(), bomb.getPosition().getY()));
 
@@ -151,37 +149,39 @@ public class GameMechanics implements Tickable, Comparable {
             double newY = pawnPosition.getY();
             boolean canMove = false;
 
-            if(direction.equals("UP")) {
-                newY+=0.6;
-                canMove = checkIfPawnDidntStuck(newX, newY, pawn);
-                if(canMove) {
-                    pawnPosition.setY(newY);
-                }
-            }
-            else if(direction.equals("DOWN")) {
-                newY-=0.6;
-                canMove = checkIfPawnDidntStuck(newX, newY, pawn);
-                if(canMove) {
-                    pawnPosition.setY(newY);
-                }
-            }
-            else if(direction.equals("LEFT")) {
-                newX-=0.6;
-                canMove = checkIfPawnDidntStuck(newX, newY, pawn);
-                if(canMove) {
-                    pawnPosition.setX(newX);
-                }
-            }
-            else if(direction.equals("RIGHT")) {
-                newX+=0.6;
-                canMove = checkIfPawnDidntStuck(newX, newY, pawn);
-                if(canMove) {
-                    pawnPosition.setX(newX);
-                }
+            switch (direction) {
+                case "UP":
+                    newY += 0.6;
+                    canMove = checkIfPawnDidntStuck(newX, newY, pawn);
+                    if (canMove) {
+                        pawnPosition.setY(newY);
+                    }
+                    break;
+                case "DOWN":
+                    newY -= 0.6;
+                    canMove = checkIfPawnDidntStuck(newX, newY, pawn);
+                    if (canMove) {
+                        pawnPosition.setY(newY);
+                    }
+                    break;
+                case "LEFT":
+                    newX -= 0.6;
+                    canMove = checkIfPawnDidntStuck(newX, newY, pawn);
+                    if (canMove) {
+                        pawnPosition.setX(newX);
+                    }
+                    break;
+                case "RIGHT":
+                    newX += 0.6;
+                    canMove = checkIfPawnDidntStuck(newX, newY, pawn);
+                    if (canMove) {
+                        pawnPosition.setX(newX);
+                    }
+                    break;
             }
             pawn.setDirection(direction);
 
-            if(canMove || topic == Topic.PLANT_BOMB) {
+            if(canMove) {
                 replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
             }
         }
@@ -264,7 +264,7 @@ public class GameMechanics implements Tickable, Comparable {
 //        }
 
         // check woods
-        Iterator<Wood> iterator1 = null;
+        Iterator<Wood> iterator1;
         for(Fire fire: firesLeft){
             iterator1 = woods.iterator();
             while(iterator1.hasNext()) {
@@ -295,13 +295,8 @@ public class GameMechanics implements Tickable, Comparable {
     }
 
     private boolean checkIfPawnDidntStuck(double currentX, double currentY, Pawn currentPawn) {
-//        Position currPos_TopLeft = new Position(currentX,currentY+ currentPawn.getTileSize());
-//        Position currPos_BottomRight = new Position(currentX+currentPawn.getTileSize(),currentY);
         Position currPos_TopLeft = new Position(currentX,currentY+ 32);
         Position currPos_BottomRight = new Position(currentX+32,currentY);
-
-        // first, check against game filed bounds
-        //if(currentX > GAME_FIELD_W || currentY > GAME_FIELD_H || currentX < 5 || currentY < 5) { return false; }
 
         // second, make sure pawn pawns don't step on each other
         for(Pawn pawn: pawns) {
@@ -345,10 +340,6 @@ public class GameMechanics implements Tickable, Comparable {
         }
 
         // If one rectangle is above other
-        if (l1.getY() <= r2.getY() || l2.getY() <= r1.getY()) {
-            return false;
-        }
-
-        return true;
+        return !(l1.getY() <= r2.getY()) && !(l2.getY() <= r1.getY());
     }
 }
