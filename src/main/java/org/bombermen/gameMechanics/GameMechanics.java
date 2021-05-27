@@ -250,19 +250,6 @@ public class GameMechanics implements Tickable, Comparable {
             }
         }
 
-
-        // check walls
-//        Iterator<Fire> iterator = fires.iterator();
-//        while(iterator.hasNext()){
-//            Fire fire = iterator.next();
-//            for(Wall wall: walls) {
-//                if(doOverlap(fire.getTopLeftPoint(), fire.getBottomRightPoint(), wall.getTopLeftPoint(), wall.getBottomRightPoint())) {
-//                    iterator.remove();
-//                    break;
-//                }
-//            }
-//        }
-
         // check woods
         Iterator<Wood> iterator1;
         for(Fire fire: firesLeft){
