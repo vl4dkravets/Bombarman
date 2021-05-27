@@ -41,7 +41,9 @@ public class Replica {
 //            broker.send(player.getName(), topic, gameElements);
 //        }
 
-        broker.broadcast1(topic, gameElements, players);
+        players.stream().parallel().forEach(player -> broker.send(player.getName(), topic, gameElements));
+        // broker.broadcast1(topic, gameElements, players);
+        //broker.broadcast2(topic, gameElements, players);
     }
 
     public void writeReplicaToInitializeGameField(ArrayList<Wood> woods, ArrayList<Wall> walls, Topic topic) {

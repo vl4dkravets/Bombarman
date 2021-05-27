@@ -52,10 +52,15 @@ public class Broker {
 //        connectionPool.broadcast(message);
 //    }
 
-    public void broadcast1(@NotNull Topic topic, @NotNull Object object, ArrayList<Player> players) {
-        String message = JsonHelper.toJson(new Message(topic, JsonHelper.toJson(object)));
-        connectionPool.broadcast1(message, players);
-    }
+//    public void broadcast1(@NotNull Topic topic, @NotNull Object object, ArrayList<Player> players) {
+//        String message = JsonHelper.toJson(new Message(topic, JsonHelper.toJson(object)));
+//        connectionPool.broadcast1(message, players);
+//    }
+//
+//    public void broadcast2(@NotNull Topic topic, @NotNull Object object, ArrayList<Player> players) {
+//        String message = JsonHelper.toJson(new Message(topic, JsonHelper.toJson(object)));
+//        connectionPool.broadcast2(message, players);
+//    }
 
     private String retrieveGameIdFromQuery(String query) {
         return query.substring(query.indexOf("=")+1, query.indexOf("&"));
