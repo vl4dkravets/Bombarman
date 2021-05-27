@@ -21,8 +21,7 @@ InputEngine.prototype.setupBindings = function() {
     this.bind(39, 'right');
     this.bind(40, 'down');
 
-    this.bind(81, 'bomb');
-    this.bind(32, 'jump');
+    this.bind(32, 'bomb');
 
     this.bind(27, 'escape');
 
