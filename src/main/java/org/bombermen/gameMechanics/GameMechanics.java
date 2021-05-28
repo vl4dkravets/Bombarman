@@ -14,7 +14,9 @@ import java.util.Random;
 public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_W = 847 - 15;
     private final int GAME_FIELD_H = 527 - 15;
+
     private final double pawnStepSize = 0.6;
+
 
     private final ArrayList<Pawn> pawns;
     private final ArrayList<Player> players;
