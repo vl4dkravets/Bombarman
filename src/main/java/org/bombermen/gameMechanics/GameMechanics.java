@@ -14,6 +14,7 @@ import java.util.Random;
 public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_W = 847 - 15;
     private final int GAME_FIELD_H = 527 - 15;
+    private final double pawnStepSize = 0.6;
 
     private final ArrayList<Pawn> pawns;
     private final ArrayList<Player> players;
@@ -151,28 +152,28 @@ public class GameMechanics implements Tickable, Comparable {
 
             switch (direction) {
                 case "UP":
-                    newY += 0.6;
+                    newY += pawnStepSize;
                     canMove = checkIfPawnDidntStuck(newX, newY, pawn);
                     if (canMove) {
                         pawnPosition.setY(newY);
                     }
                     break;
                 case "DOWN":
-                    newY -= 0.6;
+                    newY -= pawnStepSize;
                     canMove = checkIfPawnDidntStuck(newX, newY, pawn);
                     if (canMove) {
                         pawnPosition.setY(newY);
                     }
                     break;
                 case "LEFT":
-                    newX -= 0.6;
+                    newX -= pawnStepSize;
                     canMove = checkIfPawnDidntStuck(newX, newY, pawn);
                     if (canMove) {
                         pawnPosition.setX(newX);
                     }
                     break;
                 case "RIGHT":
-                    newX += 0.6;
+                    newX += pawnStepSize;
                     canMove = checkIfPawnDidntStuck(newX, newY, pawn);
                     if (canMove) {
                         pawnPosition.setX(newX);
