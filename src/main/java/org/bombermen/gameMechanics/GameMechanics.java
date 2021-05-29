@@ -17,7 +17,6 @@ public class GameMechanics implements Tickable, Comparable {
 
     private final double pawnStepSize = 0.6;
 
-
     private final ArrayList<Pawn> pawns;
     private final ArrayList<Player> players;
     private final ArrayList<Wall> walls;

@@ -11,12 +11,13 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class EventHandler extends TextWebSocketHandler implements WebSocketHandler {
 
-
+    private HashMap<String, Integer> pressCounter = new HashMap<>();
     @Override
     public void afterConnectionEstablished(@NotNull WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
@@ -29,6 +30,9 @@ public class EventHandler extends TextWebSocketHandler implements WebSocketHandl
         String playerId = session.getId();
         connectionPool.add(session,playerId);
         String gameID = retrieveGameIdFromQuery(Objects.requireNonNull(session.getUri()).getQuery());
+
+        pressCounter.put(playerId, 0);
+
         try {
             gameService.connect(playerId, gameID);
         } catch (InvalidGameIdException e) {
@@ -36,10 +40,14 @@ public class EventHandler extends TextWebSocketHandler implements WebSocketHandl
         }
     }
 
+
     @Override
     protected void handleTextMessage(@NotNull WebSocketSession session, TextMessage message) throws Exception {
-        // session.sendMessage(new TextMessage("{ \"history\": [ \"ololo\", \"2\" ] }"));
-        //System.out.println("Received " + message.toString());
+        //session.sendMessage(new TextMessage("{ \"history\": [ \"ololo\", \"2\" ] }"));
+        //System.out.println("Received from " + session.getId());
+
+        pressCounter.computeIfPresent(session.getId(), (key, value) -> value+1);
+        System.out.println(pressCounter);
         Broker broker = Broker.getInstance();
         broker.receive(session,message.getPayload());
     }
