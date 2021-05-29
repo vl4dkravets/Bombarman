@@ -1,4 +1,5 @@
 var ClusterSetting = function () {
+
 //    this.gameServer = {
 //        protocol: 'ws',
 //        host: 'localhost',
@@ -26,6 +27,7 @@ var ClusterSetting = function () {
         port: '',
         path: '/matchmaker/join'
     };
+
 };
 
 ClusterSetting.prototype.gameServerUrl = function() {
