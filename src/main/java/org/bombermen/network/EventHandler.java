@@ -56,7 +56,7 @@ public class EventHandler extends TextWebSocketHandler implements WebSocketHandl
     public void afterConnectionClosed(@NotNull WebSocketSession session, CloseStatus closeStatus) throws Exception {
         System.out.println("Socket Closed: [" + closeStatus.getCode() + "] " + closeStatus.getReason());
         super.afterConnectionClosed(session, closeStatus);
-
+        pressCounter.clear();
     }
 
     private String retrieveGameIdFromQuery(String query) {
