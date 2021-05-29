@@ -47,7 +47,7 @@ public class EventHandler extends TextWebSocketHandler implements WebSocketHandl
         //System.out.println("Received from " + session.getId());
 
         pressCounter.computeIfPresent(session.getId(), (key, value) -> value+1);
-        System.out.println(pressCounter);
+        System.out.println("Received: " + pressCounter);
         Broker broker = Broker.getInstance();
         broker.receive(session,message.getPayload());
     }
@@ -56,7 +56,9 @@ public class EventHandler extends TextWebSocketHandler implements WebSocketHandl
     public void afterConnectionClosed(@NotNull WebSocketSession session, CloseStatus closeStatus) throws Exception {
         System.out.println("Socket Closed: [" + closeStatus.getCode() + "] " + closeStatus.getReason());
         super.afterConnectionClosed(session, closeStatus);
+
         pressCounter.clear();
+        ConnectionPool.getInstance().clearPressCounter();
     }
 
     private String retrieveGameIdFromQuery(String query) {

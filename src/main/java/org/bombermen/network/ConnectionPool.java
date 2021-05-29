@@ -8,6 +8,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -19,6 +20,8 @@ public class ConnectionPool {
     private static final int PARALLELISM_LEVEL = 2;
     private final AtomicInteger playerNumber;
     private final ConcurrentHashMap<WebSocketSession, String> pool;
+
+    private HashMap<String, Integer> pressCounter = new HashMap<>();
 
     public static ConnectionPool getInstance() {
         return instance;
@@ -33,12 +36,23 @@ public class ConnectionPool {
         if (session.isOpen()) {
             try {
                 session.sendMessage(new TextMessage(msg));
+                if(pressCounter.containsKey(session.getId())) {
+                    pressCounter.computeIfPresent(session.getId(), (key, value) -> value+1);
+                }
+                else {
+                    pressCounter.put(session.getId(), 0);
+                }
+                System.out.println("Sent: " + pressCounter);
 
                 // System.out.println("message was sent:\n");
                 // System.out.println(msg);
             } catch (IOException ignored) {
             }
         }
+    }
+
+    public void clearPressCounter(){
+        pressCounter.clear();
     }
 
 //    public void broadcast(@NotNull String msg) {
