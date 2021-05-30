@@ -36,13 +36,13 @@ public class ConnectionPool {
         if (session.isOpen()) {
             try {
                 session.sendMessage(new TextMessage(msg));
-                if(pressCounter.containsKey(session.getId())) {
-                    pressCounter.computeIfPresent(session.getId(), (key, value) -> value+1);
-                }
-                else {
-                    pressCounter.put(session.getId(), 0);
-                }
-                System.out.println("Sent: " + pressCounter);
+//                if(pressCounter.containsKey(session.getId())) {
+//                    pressCounter.computeIfPresent(session.getId(), (key, value) -> value+1);
+//                }
+//                else {
+//                    pressCounter.put(session.getId(), 0);
+//                }
+//                System.out.println("Sent: " + pressCounter);
 
                 // System.out.println("message was sent:\n");
                 // System.out.println(msg);

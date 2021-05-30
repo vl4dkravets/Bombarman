@@ -103,7 +103,8 @@ public class GameMechanics implements Tickable, Comparable {
         Pawn pawn1 = pawns.get(0);
         Pawn pawn2 = pawns.get(1);
         pawn1.setPosition(TILE_SIZE, TILE_SIZE);
-        pawn2.setPosition(GAME_FIELD_W-TILE_SIZE, GAME_FIELD_H-TILE_SIZE);
+        //pawn2.setPosition(GAME_FIELD_W-TILE_SIZE, GAME_FIELD_H-TILE_SIZE);
+        pawn2.setPosition(TILE_SIZE, TILE_SIZE*2);
         pawn1.setBomb(new Bomb(pawn1.getPosition()));
         pawn2.setBomb(new Bomb(pawn2.getPosition()));
         bombs.add(pawn1.getBomb());
