@@ -13,6 +13,7 @@ var InputEngine = function () {
 
     this.possessed = null;
     this.subscribers = [];
+    this.fps = 60;
 };
 
 InputEngine.prototype.setupBindings = function() {
