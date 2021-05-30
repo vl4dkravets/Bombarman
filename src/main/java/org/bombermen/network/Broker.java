@@ -25,7 +25,7 @@ public class Broker {
         this.connectionPool = ConnectionPool.getInstance();
     }
 
-    public void receive(@NotNull WebSocketSession session, @NotNull String msg) {
+    public void receive(@NotNull WebSocketSession session, @NotNull String msg) throws InterruptedException {
         //log.info("RECEIVED: " + msg);
         //TODO TASK2 implement message processing
         GameService gameService = GameService.getInstance();

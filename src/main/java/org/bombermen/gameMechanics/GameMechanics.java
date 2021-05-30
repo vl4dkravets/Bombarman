@@ -127,11 +127,21 @@ public class GameMechanics implements Tickable, Comparable {
             return;
         }
 
+
         for(Message message: inputQueue) {
             Topic topic = message.getTopic();
             String messageData = message.getData();
             String playerName = message.getPlayerName();
             Pawn pawn = pawns.stream().filter(pawn1 -> pawn1.getPlayerName().equals(playerName)).findFirst().get();
+
+//            if(pawn.movedPerTick == false) {
+//                pawn.movedPerTick = true;
+//            }
+//            else {
+//                pawn.movedPerTick = false;
+//                break;
+//            }
+
             Position pawnPosition = pawn.getPosition();
             String direction;
 
@@ -208,6 +218,12 @@ public class GameMechanics implements Tickable, Comparable {
 
             }
         }
+
+//        Pawn pawnAuto = pawns.get(1);
+//        double x = pawnAuto.getPosition().getX()+pawnStepSize;
+//        double y = pawnAuto.getPosition().getY();
+//        pawnAuto.setPosition(x,y);
+
         replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
     }
 
