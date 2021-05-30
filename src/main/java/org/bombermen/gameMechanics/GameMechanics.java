@@ -237,10 +237,10 @@ public class GameMechanics implements Tickable, Comparable {
             }
         }
 
-        Pawn pawnAuto = pawns.get(1);
-        double x = pawnAuto.getPosition().getX()+pawnStepSize;
-        double y = pawnAuto.getPosition().getY();
-        pawnAuto.setPosition(x,y);
+//        Pawn pawnAuto = pawns.get(1);
+//        double x = pawnAuto.getPosition().getX()+pawnStepSize;
+//        double y = pawnAuto.getPosition().getY();
+//        pawnAuto.setPosition(x,y);
 
         replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
     }
