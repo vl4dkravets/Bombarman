@@ -126,22 +126,13 @@ public class GameMechanics implements Tickable, Comparable {
             }
             return;
         }
-
+        boolean breakOut = false;
 
         for(Message message: inputQueue) {
             Topic topic = message.getTopic();
             String messageData = message.getData();
             String playerName = message.getPlayerName();
             Pawn pawn = pawns.stream().filter(pawn1 -> pawn1.getPlayerName().equals(playerName)).findFirst().get();
-
-//            if(pawn.movedPerTick == false) {
-//                pawn.movedPerTick = true;
-//            }
-//            else {
-//                pawn.movedPerTick = false;
-//                break;
-//            }
-
             Position pawnPosition = pawn.getPosition();
             String direction;
 
@@ -158,6 +149,16 @@ public class GameMechanics implements Tickable, Comparable {
                 direction = messageData.substring(messageData.indexOf(":")+2, messageData.indexOf("}")-1);
             }
 
+            if(pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))){
+                continue;
+            }
+            if(pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))){
+                continue;
+            }
+            if(pawn.movedPerTickY && pawn.movedPerTickX) {
+                break;
+            }
+
             double newX = pawnPosition.getX();
             double newY = pawnPosition.getY();
             boolean canMove = false;
@@ -168,6 +169,9 @@ public class GameMechanics implements Tickable, Comparable {
                     canMove = checkIfPawnDidntStuck(newX, newY, pawn);
                     if (canMove) {
                         pawnPosition.setY(newY);
+
+                        pawn.movedPerTickY = true;
+
                     }
                     break;
                 case "DOWN":
@@ -175,6 +179,9 @@ public class GameMechanics implements Tickable, Comparable {
                     canMove = checkIfPawnDidntStuck(newX, newY, pawn);
                     if (canMove) {
                         pawnPosition.setY(newY);
+
+                        pawn.movedPerTickY = true;
+
                     }
                     break;
                 case "LEFT":
@@ -182,6 +189,9 @@ public class GameMechanics implements Tickable, Comparable {
                     canMove = checkIfPawnDidntStuck(newX, newY, pawn);
                     if (canMove) {
                         pawnPosition.setX(newX);
+
+                        pawn.movedPerTickX = true;
+
                     }
                     break;
                 case "RIGHT":
@@ -189,6 +199,9 @@ public class GameMechanics implements Tickable, Comparable {
                     canMove = checkIfPawnDidntStuck(newX, newY, pawn);
                     if (canMove) {
                         pawnPosition.setX(newX);
+
+                        pawn.movedPerTickX = true;
+
                     }
                     break;
             }
@@ -197,6 +210,11 @@ public class GameMechanics implements Tickable, Comparable {
             if(canMove) {
                 replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
             }
+        }
+
+        for(Pawn p: pawns) {
+            p.movedPerTickY = false;
+            p.movedPerTickX = false;
         }
     }
 
@@ -219,10 +237,10 @@ public class GameMechanics implements Tickable, Comparable {
             }
         }
 
-//        Pawn pawnAuto = pawns.get(1);
-//        double x = pawnAuto.getPosition().getX()+pawnStepSize;
-//        double y = pawnAuto.getPosition().getY();
-//        pawnAuto.setPosition(x,y);
+        Pawn pawnAuto = pawns.get(1);
+        double x = pawnAuto.getPosition().getX()+pawnStepSize;
+        double y = pawnAuto.getPosition().getY();
+        pawnAuto.setPosition(x,y);
 
         replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
     }
