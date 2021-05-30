@@ -13,7 +13,9 @@ var InputEngine = function () {
 
     this.possessed = null;
     this.subscribers = [];
+    this.myCounter = 0;
     this.fps = 60;
+
 };
 
 InputEngine.prototype.setupBindings = function() {
@@ -58,12 +60,14 @@ InputEngine.prototype.onKeyDown = function(event) {
         var subscribers = gInputEngine.subscribers[action];
         if (subscribers) {
             for (var i in subscribers) {
-                subscribers[i]()
+                subscribers[i]();
+                gInputEngine.myCounter=gInputEngine.myCounter+1;
             }
         }
-
+        console.log("Message sent " + gInputEngine.myCounter);
         event.preventDefault();
     }
+
     return false;
 };
 
