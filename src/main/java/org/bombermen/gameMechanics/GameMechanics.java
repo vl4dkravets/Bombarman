@@ -155,9 +155,10 @@ public class GameMechanics implements Tickable, Comparable {
             if(pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))){
                 continue;
             }
-            if(pawn.movedPerTickY && pawn.movedPerTickX) {
-                break;
-            }
+
+//            if(pawn.movedPerTickY && pawn.movedPerTickX) {
+//                break;
+//            }
 
             double newX = pawnPosition.getX();
             double newY = pawnPosition.getY();
