@@ -16,6 +16,8 @@ public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_H = 527 - 15;
 
     private final double pawnStepSize = 1.8;
+    public long start = System.currentTimeMillis();
+    public boolean showPosStats = true;
 
     private final ArrayList<Pawn> pawns;
     private final ArrayList<Player> players;
@@ -90,14 +92,15 @@ public class GameMechanics implements Tickable, Comparable {
 //                }
 //            }
 //        }
-        walls.add(new Wall(0, new Position(TILE_SIZE, TILE_SIZE*4)));
+        walls.add(new Wall(0, new Position(TILE_SIZE+200, TILE_SIZE)));
+        walls.add(new Wall(1, new Position(TILE_SIZE+200, TILE_SIZE*2)));
         replica.writeReplicaToInitializeGameField(woods, walls, Topic.START);
     }
 
     private void createPawns(){
         // create the pawns for each player to control
         for(int i = 0; i < nOfPawns; i++){
-            pawns.add(new Pawn(i, players.get(i).getName()));
+            pawns.add(new Pawn(i, players.get(i).getName(),"Pawn_"+i));
         }
 
         Pawn pawn1 = pawns.get(0);
@@ -129,6 +132,7 @@ public class GameMechanics implements Tickable, Comparable {
         boolean breakOut = false;
 
         for(Message message: inputQueue) {
+            //System.out.println("Entering tick loop");
             Topic topic = message.getTopic();
             String messageData = message.getData();
             String playerName = message.getPlayerName();
@@ -172,7 +176,7 @@ public class GameMechanics implements Tickable, Comparable {
                         pawnPosition.setY(newY);
 
                         pawn.movedPerTickY = true;
-
+                        //System.out.println(pawn + ": " + direction);
                     }
                     break;
                 case "DOWN":
@@ -182,7 +186,7 @@ public class GameMechanics implements Tickable, Comparable {
                         pawnPosition.setY(newY);
 
                         pawn.movedPerTickY = true;
-
+                        //System.out.println(pawn + ": " + direction);
                     }
                     break;
                 case "LEFT":
@@ -192,7 +196,7 @@ public class GameMechanics implements Tickable, Comparable {
                         pawnPosition.setX(newX);
 
                         pawn.movedPerTickX = true;
-
+                        //System.out.println(pawn + ": " + direction);
                     }
                     break;
                 case "RIGHT":
@@ -202,7 +206,7 @@ public class GameMechanics implements Tickable, Comparable {
                         pawnPosition.setX(newX);
 
                         pawn.movedPerTickX = true;
-
+                        //System.out.println(pawn + ": " + direction);
                     }
                     break;
             }
@@ -217,6 +221,15 @@ public class GameMechanics implements Tickable, Comparable {
             p.movedPerTickY = false;
             p.movedPerTickX = false;
         }
+
+        long val = System.currentTimeMillis() - start;
+        if(val > 10_000 && showPosStats) {
+            pawns.forEach(p -> {
+                System.out.println(p + ": " + p.getPosition().posChanged);
+            });
+            showPosStats = false;
+        }
+
     }
 
     private void handleGameOver() {

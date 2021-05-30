@@ -21,7 +21,7 @@ public class ConnectionPool {
     private final AtomicInteger playerNumber;
     private final ConcurrentHashMap<WebSocketSession, String> pool;
 
-    private HashMap<String, Integer> pressCounter = new HashMap<>();
+    public HashMap<String, Integer> pressesSent = new HashMap<>();
 
     public static ConnectionPool getInstance() {
         return instance;
@@ -36,12 +36,12 @@ public class ConnectionPool {
         if (session.isOpen()) {
             try {
                 session.sendMessage(new TextMessage(msg));
-//                if(pressCounter.containsKey(session.getId())) {
-//                    pressCounter.computeIfPresent(session.getId(), (key, value) -> value+1);
-//                }
-//                else {
-//                    pressCounter.put(session.getId(), 0);
-//                }
+                if(pressesSent.containsKey(session.getId())) {
+                    pressesSent.compute(session.getId(), (key, value) -> value+1);
+                }
+                else {
+                    pressesSent.put(session.getId(), 0);
+                }
 //                System.out.println("Sent: " + pressCounter);
 
                 // System.out.println("message was sent:\n");
@@ -51,9 +51,6 @@ public class ConnectionPool {
         }
     }
 
-    public void clearPressCounter(){
-        pressCounter.clear();
-    }
 
 //    public void broadcast(@NotNull String msg) {
 //        pool.forEachKey(PARALLELISM_LEVEL, session -> send(session, msg));

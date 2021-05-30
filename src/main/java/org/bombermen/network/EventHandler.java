@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutionException;
 
 public class EventHandler extends TextWebSocketHandler implements WebSocketHandler {
 
-    //private HashMap<String, Integer> pressCounter = new HashMap<>();
+    private HashMap<String, Integer> pressCounter = new HashMap<>();
 
     @Override
     public void afterConnectionEstablished(@NotNull WebSocketSession session) throws Exception {
@@ -32,7 +32,7 @@ public class EventHandler extends TextWebSocketHandler implements WebSocketHandl
         connectionPool.add(session,playerId);
         String gameID = retrieveGameIdFromQuery(Objects.requireNonNull(session.getUri()).getQuery());
 
-        //pressCounter.put(playerId, 0);
+        pressCounter.put(playerId, 0);
 
         try {
             gameService.connect(playerId, gameID);
@@ -47,8 +47,7 @@ public class EventHandler extends TextWebSocketHandler implements WebSocketHandl
         //session.sendMessage(new TextMessage("{ \"history\": [ \"ololo\", \"2\" ] }"));
         //System.out.println("Received from " + session.getId());
 
-//        pressCounter.computeIfPresent(session.getId(), (key, value) -> value+1);
-//        System.out.println("Received: " + pressCounter);
+        pressCounter.computeIfPresent(session.getId(), (key, value) -> value+1);
         Broker broker = Broker.getInstance();
         broker.receive(session,message.getPayload());
     }
@@ -57,9 +56,11 @@ public class EventHandler extends TextWebSocketHandler implements WebSocketHandl
     public void afterConnectionClosed(@NotNull WebSocketSession session, CloseStatus closeStatus) throws Exception {
         System.out.println("Socket Closed: [" + closeStatus.getCode() + "] " + closeStatus.getReason());
         super.afterConnectionClosed(session, closeStatus);
+        System.out.println("Received messages:" + "\n" + pressCounter);
+        System.out.println("Sent messages:" + "\n" + ConnectionPool.getInstance().pressesSent);
 
-//        pressCounter.clear();
-//        ConnectionPool.getInstance().clearPressCounter();
+        ConnectionPool.getInstance().pressesSent.clear();
+        pressCounter.clear();
     }
 
     private String retrieveGameIdFromQuery(String query) {
