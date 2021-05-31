@@ -7,6 +7,7 @@ public class Pawn extends GameElement{
     private Bomb bomb;
     public boolean movedPerTickX;
     public boolean movedPerTickY;
+    public int counter;
 
     public Pawn(int id, String playerName, String pawnName) {
         super(id, type, new Position(0,0));

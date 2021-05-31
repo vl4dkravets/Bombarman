@@ -15,7 +15,7 @@ public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_W = 847 - 15;
     private final int GAME_FIELD_H = 527 - 15;
 
-    private final double pawnStepSize = 45.8;
+    private final double pawnStepSize = 25.8;
     public long start = System.currentTimeMillis();
     public boolean showPosStats = true;
 
@@ -92,8 +92,8 @@ public class GameMechanics implements Tickable, Comparable {
 //                }
 //            }
 //        }
-//        walls.add(new Wall(0, new Position(TILE_SIZE+200, TILE_SIZE)));
-//        walls.add(new Wall(1, new Position(TILE_SIZE+200, TILE_SIZE*2)));
+        walls.add(new Wall(0, new Position(TILE_SIZE+300, TILE_SIZE)));
+        walls.add(new Wall(1, new Position(TILE_SIZE+300, TILE_SIZE*2)));
         replica.writeReplicaToInitializeGameField(woods, walls, Topic.START);
     }
 
@@ -152,6 +152,8 @@ public class GameMechanics implements Tickable, Comparable {
             else {
                 direction = messageData.substring(messageData.indexOf(":")+2, messageData.indexOf("}")-1);
             }
+
+            System.out.println(pawn + " - " + direction + " - " + pawn.counter++);
 
             if(pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))){
                 continue;
