@@ -121,9 +121,9 @@ public class GameMechanics implements Tickable, Comparable {
         List<Message> inputQueue = gameSession.getInputQueue();
         handlePlantedBomb(elapsed);
 
-        if(firstDeadPawn != null) {
-            GAME_END_PAUSE-=elapsed;
-            if(GAME_END_PAUSE <= 0) {
+        if (firstDeadPawn != null) {
+            GAME_END_PAUSE -= elapsed;
+            if (GAME_END_PAUSE <= 0) {
                 handleGameOver();
                 Thread.currentThread().interrupt();
             }
@@ -131,8 +131,12 @@ public class GameMechanics implements Tickable, Comparable {
         }
         boolean breakOut = false;
 
-        for(Message message: inputQueue) {
-            //System.out.println("Entering tick loop");
+//        if(showPosStats) {
+//            System.out.println("Entering tick loop");
+//        }
+
+        for (Message message : inputQueue) {
+
             Topic topic = message.getTopic();
             String messageData = message.getData();
             String playerName = message.getPlayerName();
@@ -140,7 +144,7 @@ public class GameMechanics implements Tickable, Comparable {
             Position pawnPosition = pawn.getPosition();
             String direction;
 
-            if(topic == Topic.PLANT_BOMB) {
+            if (topic == Topic.PLANT_BOMB) {
                 Bomb bomb = pawn.getBomb();
                 bomb.setPosition(new Position(bomb.getPosition().getX(), bomb.getPosition().getY()));
 
@@ -148,17 +152,16 @@ public class GameMechanics implements Tickable, Comparable {
                 bombs.add(pawn.getBomb());
                 handlePlantedBomb(elapsed);
                 continue;
-            }
-            else {
-                direction = messageData.substring(messageData.indexOf(":")+2, messageData.indexOf("}")-1);
+            } else {
+                direction = messageData.substring(messageData.indexOf(":") + 2, messageData.indexOf("}") - 1);
             }
 
             System.out.println(pawn + " - " + direction + " - " + pawn.counter++);
 
-            if(pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))){
+            if (pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) {
                 continue;
             }
-            if(pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))){
+            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
                 continue;
             }
 
@@ -178,7 +181,7 @@ public class GameMechanics implements Tickable, Comparable {
                         pawnPosition.setY(newY);
 
                         pawn.movedPerTickY = true;
-                        //System.out.println(pawn + ": " + direction);
+                        System.out.println("\t" + pawn + ": " + pawn.getPosition());
                     }
                     break;
                 case "DOWN":
@@ -188,7 +191,7 @@ public class GameMechanics implements Tickable, Comparable {
                         pawnPosition.setY(newY);
 
                         pawn.movedPerTickY = true;
-                        //System.out.println(pawn + ": " + direction);
+                        System.out.println("\t" + pawn + ": " + pawn.getPosition());
                     }
                     break;
                 case "LEFT":
@@ -198,7 +201,7 @@ public class GameMechanics implements Tickable, Comparable {
                         pawnPosition.setX(newX);
 
                         pawn.movedPerTickX = true;
-                        //System.out.println(pawn + ": " + direction);
+                        System.out.println("\t" + pawn + ": " + pawn.getPosition());
                     }
                     break;
                 case "RIGHT":
@@ -208,24 +211,28 @@ public class GameMechanics implements Tickable, Comparable {
                         pawnPosition.setX(newX);
 
                         pawn.movedPerTickX = true;
-                        //System.out.println(pawn + ": " + direction);
+                        System.out.println("\t" + pawn + ": " + pawn.getPosition());
                     }
                     break;
             }
             pawn.setDirection(direction);
 
-            if(canMove) {
+            if (canMove) {
                 replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
+                System.out.println("\tReplica sent#" + replica.counter++ + "\n");
             }
         }
+//        if(showPosStats) {
+//            System.out.println("Ending tick loop\n");
+//        }
 
-        for(Pawn p: pawns) {
+        for (Pawn p : pawns) {
             p.movedPerTickY = false;
             p.movedPerTickX = false;
         }
 
         long val = System.currentTimeMillis() - start;
-        if(val > 10_000 && showPosStats) {
+        if (val > 5_000 && showPosStats) {
             pawns.forEach(p -> {
                 System.out.println(p + ": " + p.getPosition().posChanged);
             });

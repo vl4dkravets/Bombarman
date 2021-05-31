@@ -9,6 +9,8 @@ public class Replica {
     private final ArrayList<Player> players;
     private final Broker broker;
 
+    public int counter;
+
     public Replica(ArrayList<Player> players) {
         this.players = players;
         broker = Broker.getInstance();
