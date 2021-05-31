@@ -141,7 +141,7 @@ public class GameMechanics implements Tickable, Comparable {
 
         for (Message message : inputQueue) {
 
-            if(System.currentTimeMillis()-start >= elapsed){
+            if(System.currentTimeMillis()-start >= elapsed-5){
                 gameSession.saveMessagesForNextTick(inputQueue.subList(inputQueue.indexOf(message), inputQueue.size()));
                 System.out.println("saved messages for the next tick");
                 break;
