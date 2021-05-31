@@ -15,7 +15,7 @@ public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_W = 847 - 15;
     private final int GAME_FIELD_H = 527 - 15;
 
-    private final double pawnStepSize = 25.8;
+    private final double pawnStepSize = 2.0;
     public long start = System.currentTimeMillis();
     public boolean showPosStats = true;
 
@@ -119,7 +119,7 @@ public class GameMechanics implements Tickable, Comparable {
     @Override
     public void tick(long elapsed) {
         List<Message> inputQueue = gameSession.getInputQueue();
-        //handlePlantedBomb(elapsed);
+        handlePlantedBomb(elapsed);
 
         if (firstDeadPawn != null) {
             GAME_END_PAUSE -= elapsed;
@@ -218,7 +218,7 @@ public class GameMechanics implements Tickable, Comparable {
             pawn.setDirection(direction);
 
             if (canMove) {
-                //replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
+                replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
                 System.out.println("\tReplica sent#" + replica.counter++ + "\n");
             }
         }
