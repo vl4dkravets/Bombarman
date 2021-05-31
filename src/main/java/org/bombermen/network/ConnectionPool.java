@@ -34,20 +34,20 @@ public class ConnectionPool {
 
     public void send(@NotNull WebSocketSession session, @NotNull String msg) {
         if (session.isOpen()) {
-            try {
-                session.sendMessage(new TextMessage(msg));
-                if(pressesSent.containsKey(session.getId())) {
-                    pressesSent.compute(session.getId(), (key, value) -> value+1);
-                }
-                else {
-                    pressesSent.put(session.getId(), 0);
-                }
-//                System.out.println("Sent: " + pressCounter);
-
-                // System.out.println("message was sent:\n");
-                // System.out.println(msg);
-            } catch (IOException ignored) {
-            }
+//            try {
+//                //session.sendMessage(new TextMessage(msg));
+//                if(pressesSent.containsKey(session.getId())) {
+//                    pressesSent.compute(session.getId(), (key, value) -> value+1);
+//                }
+//                else {
+//                    pressesSent.put(session.getId(), 0);
+//                }
+////                System.out.println("Sent: " + pressCounter);
+//
+//                // System.out.println("message was sent:\n");
+//                // System.out.println(msg);
+//            } catch (IOException ignored) {
+//            }
         }
     }
 
