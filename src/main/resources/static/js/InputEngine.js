@@ -64,7 +64,10 @@ InputEngine.prototype.onKeyUp = function(event) {
 
 InputEngine.prototype.onKeyDown = function(event) {
 
-    pressed[event.which] = event.timeStamp;
+    if (!pressed[event.which]) {
+        pressed[event.which] = event.timeStamp;
+    }
+
 
     var action = gInputEngine.bindings[event.keyCode];
     if (action) {
