@@ -36,7 +36,7 @@ InputEngine.prototype.setupBindings = function() {
         40 : this.onKeyDown
     }, 1000 / this.fps);
 
-    document.addEventListener('keydown', this.onKeyDown);
+    document.addEventListener('keypress', this.onKeyDown);
     document.addEventListener('keyup', this.onKeyUp);
 };
 
@@ -63,7 +63,7 @@ InputEngine.prototype.onKeyUp = function(event) {
 };
 
 InputEngine.prototype.onKeyDown = function(event) {
-
+    //console.trace();
     if (!pressed[event.which]) {
         pressed[event.which] = event.timeStamp;
     }
