@@ -61,10 +61,10 @@ InputEngine.prototype.onKeyDown = function(event) {
         if (subscribers) {
             for (var i in subscribers) {
                 subscribers[i]();
-                //gInputEngine.myCounter=gInputEngine.myCounter+1;
+                gInputEngine.myCounter=gInputEngine.myCounter+1;
             }
         }
-        //console.log("Message sent " + gInputEngine.myCounter);
+        console.log("Message sent " + gInputEngine.myCounter);
         event.preventDefault();
     }
 
