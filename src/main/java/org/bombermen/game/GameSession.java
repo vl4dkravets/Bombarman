@@ -54,4 +54,8 @@ public class GameSession {
     public void deleteSession() {
         GameService.getInstance().getGames().remove(gameID);
     }
+
+    public void saveMessagesForNextTick(List<Message> messages) {
+        messages.forEach(m -> inputQueue.offer(m));
+    }
 }
