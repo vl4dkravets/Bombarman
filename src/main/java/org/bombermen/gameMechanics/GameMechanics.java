@@ -92,8 +92,8 @@ public class GameMechanics implements Tickable, Comparable {
 //                }
 //            }
 //        }
-        walls.add(new Wall(0, new Position(TILE_SIZE+300, TILE_SIZE)));
-        walls.add(new Wall(1, new Position(TILE_SIZE+300, TILE_SIZE*2)));
+        walls.add(new Wall(0, new Position(TILE_SIZE+800, TILE_SIZE)));
+        walls.add(new Wall(1, new Position(TILE_SIZE+800, TILE_SIZE*2)));
         replica.writeReplicaToInitializeGameField(woods, walls, Topic.START);
     }
 
