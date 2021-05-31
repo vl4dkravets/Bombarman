@@ -34,7 +34,7 @@ InputEngine.prototype.setupBindings = function() {
         38 : this.onKeyDown,
         39 : this.onKeyDown,
         40 : this.onKeyDown
-    }, 0);
+    }, 1000 / this.fps);
 
     document.addEventListener('keydown', this.onKeyDown);
     document.addEventListener('keyup', this.onKeyUp);
@@ -44,8 +44,17 @@ InputEngine.prototype.bind = function(key, action) {
     this.bindings[key] = action;
 };
 
+var pressed = {};
+
 InputEngine.prototype.onKeyUp = function(event) {
     var action = gInputEngine.bindings[event.keyCode];
+
+    var duration = ( event.timeStamp - pressed[event.which]) / 1000;
+    // Key "e.which" was pressed for "duration" seconds
+    console.log(duration);
+    pressed[event.which] = 0;
+
+
     if (action) {
         gInputEngine.actions[action] = false;
         event.preventDefault();
@@ -54,6 +63,9 @@ InputEngine.prototype.onKeyUp = function(event) {
 };
 
 InputEngine.prototype.onKeyDown = function(event) {
+
+    pressed[event.which] = event.timeStamp;
+
     var action = gInputEngine.bindings[event.keyCode];
     if (action) {
         gInputEngine.actions[action] = true;
