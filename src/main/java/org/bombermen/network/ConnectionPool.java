@@ -42,7 +42,7 @@ public class ConnectionPool {
                 else {
                     pressesSent.put(session.getId(), 0);
                 }
-//                System.out.println("Sent: " + pressCounter);
+                //System.out.println("Sent: " + pressCounter);
 
                 // System.out.println("message was sent:\n");
                 // System.out.println(msg);

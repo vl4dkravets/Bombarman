@@ -15,7 +15,7 @@ public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_W = 847 - 15;
     private final int GAME_FIELD_H = 527 - 15;
 
-    private final double pawnStepSize = 2.0;
+    private final double pawnStepSize = 25.0;
     public long start = System.currentTimeMillis();
     public boolean showPosStats = true;
 
