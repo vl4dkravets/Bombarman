@@ -13,7 +13,7 @@ var InputEngine = function () {
 
     this.possessed = null;
     this.subscribers = [];
-    this.myCounter = 0;
+    //this.myCounter = 0;
     this.fps = 60;
 
 };
