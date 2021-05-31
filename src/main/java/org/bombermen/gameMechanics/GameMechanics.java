@@ -34,8 +34,6 @@ public class GameMechanics implements Tickable, Comparable {
     private Pawn firstDeadPawn;
     private long GAME_END_PAUSE = 3000;
 
-
-
     public GameMechanics(GameSession gameSession) {
         TILE_SIZE = 32;
         pawns = new ArrayList<>();
@@ -123,8 +121,6 @@ public class GameMechanics implements Tickable, Comparable {
         List<Message> inputQueue = gameSession.getInputQueue();
         handlePlantedBomb(elapsed);
 
-        long start= System.currentTimeMillis();
-
         if (firstDeadPawn != null) {
             GAME_END_PAUSE -= elapsed;
             if (GAME_END_PAUSE <= 0) {
@@ -140,12 +136,6 @@ public class GameMechanics implements Tickable, Comparable {
 //        }
 
         for (Message message : inputQueue) {
-
-            if(System.currentTimeMillis()-start >= elapsed-5){
-                gameSession.saveMessagesForNextTick(inputQueue.subList(inputQueue.indexOf(message), inputQueue.size()));
-                System.out.println("saved messages for the next tick");
-                break;
-            }
 
             Topic topic = message.getTopic();
             String messageData = message.getData();
@@ -168,6 +158,12 @@ public class GameMechanics implements Tickable, Comparable {
 
             //System.out.println(pawn + " - " + direction + " - " + pawn.counter++);
 
+//            if (pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) {
+//                continue;
+//            }
+//            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
+//                continue;
+//            }
 
             if (pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) {
                 continue;
@@ -175,7 +171,6 @@ public class GameMechanics implements Tickable, Comparable {
             if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
                 continue;
             }
-
 
 //            if(pawn.movedPerTickY && pawn.movedPerTickX) {
 //                break;
