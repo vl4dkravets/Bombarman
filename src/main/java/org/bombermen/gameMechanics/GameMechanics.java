@@ -15,7 +15,7 @@ public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_W = 847 - 15;
     private final int GAME_FIELD_H = 527 - 15;
 
-    private final double pawnStepSize = 15.0;
+    private final double pawnStepSize = 9.5;
     public long start = System.currentTimeMillis();
     public boolean showPosStats = true;
 
@@ -158,12 +158,12 @@ public class GameMechanics implements Tickable, Comparable {
 
             System.out.println(pawn + " - " + direction + " - " + pawn.counter++);
 
-            if (pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) {
-                continue;
-            }
-            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
-                continue;
-            }
+//            if (pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) {
+//                continue;
+//            }
+//            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
+//                continue;
+//            }
 
 //            if(pawn.movedPerTickY && pawn.movedPerTickX) {
 //                break;
