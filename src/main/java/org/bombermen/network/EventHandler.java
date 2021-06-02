@@ -47,9 +47,9 @@ public class EventHandler extends TextWebSocketHandler implements WebSocketHandl
         //session.sendMessage(new TextMessage("{ \"history\": [ \"ololo\", \"2\" ] }"));
         //System.out.println("Received from " + session.getId());
 
-//        pressCounter.computeIfPresent(session.getId(), (key, value) -> value+1);
-//        Broker broker = Broker.getInstance();
-//        broker.receive(session,message.getPayload());
+        pressCounter.computeIfPresent(session.getId(), (key, value) -> value+1);
+        Broker broker = Broker.getInstance();
+        broker.receive(session,message.getPayload());
     }
 
     @Override

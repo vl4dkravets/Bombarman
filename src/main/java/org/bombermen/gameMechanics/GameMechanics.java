@@ -15,7 +15,7 @@ public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_W = 847 - 15;
     private final int GAME_FIELD_H = 527 - 15;
 
-    private final double pawnStepSize = 2;
+    private final double pawnStepSize = 3;
     public long start = System.currentTimeMillis();
     public boolean showPosStats = true;
 
@@ -158,19 +158,13 @@ public class GameMechanics implements Tickable, Comparable {
 
             //System.out.println(pawn + " - " + direction + " - " + pawn.counter++);
 
-//            if (pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) {
+//            if (pawn.movedPerTickY && ((direction.equals("UP") || direction.equals("DOWN")))) {
 //                continue;
 //            }
 //            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
 //                continue;
 //            }
 
-//            if (pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) {
-//                continue;
-//            }
-//            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
-//                continue;
-//            }
 
 //            if(pawn.movedPerTickY && pawn.movedPerTickX) {
 //                break;
@@ -229,6 +223,12 @@ public class GameMechanics implements Tickable, Comparable {
                 //System.out.println("\tReplica sent#" + replica.counter++ + "\n");
             }
         }
+
+        replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
+//        fires.clear();
+//        firesLeft.clear();
+//        destroyedWoods.clear();
+
 //        if(showPosStats) {
 //            System.out.println("Ending tick loop\n");
 //        }
@@ -272,7 +272,7 @@ public class GameMechanics implements Tickable, Comparable {
 //        double y = pawnAuto.getPosition().getY();
 //        pawnAuto.setPosition(x,y);
 
-        replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
+        //replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
     }
 
     private void handleFires(Position explosionPosition){
@@ -342,7 +342,7 @@ public class GameMechanics implements Tickable, Comparable {
             if(firstDeadPawn != null) {break;}
         }
 
-        replica.writeReplica(pawns, bombs, firesLeft, destroyedWoods, Topic.REPLICA);
+        //replica.writeReplica(pawns, bombs, firesLeft, destroyedWoods, Topic.REPLICA);
         fires.clear();
         firesLeft.clear();
         destroyedWoods.clear();
