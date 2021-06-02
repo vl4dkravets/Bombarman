@@ -92,8 +92,8 @@ public class GameMechanics implements Tickable, Comparable {
 //                }
 //            }
 //        }
-        walls.add(new Wall(0, new Position(TILE_SIZE+800, TILE_SIZE)));
-        walls.add(new Wall(1, new Position(TILE_SIZE+800, TILE_SIZE*2)));
+        walls.add(new Wall(0, new Position(TILE_SIZE+400, TILE_SIZE)));
+        walls.add(new Wall(1, new Position(TILE_SIZE+400, TILE_SIZE*2)));
         replica.writeReplicaToInitializeGameField(woods, walls, Topic.START);
     }
 
@@ -129,11 +129,18 @@ public class GameMechanics implements Tickable, Comparable {
             }
             return;
         }
+
+        if(System.currentTimeMillis()-start>=7_000){
+            handleGameOver();
+            Thread.currentThread().interrupt();
+        }
+
         boolean breakOut = false;
 
 //        if(showPosStats) {
 //            System.out.println("Entering tick loop");
 //        }
+        System.out.println("Inputqueue size: " + inputQueue.size());
 
         for (Message message : inputQueue) {
 
@@ -158,13 +165,16 @@ public class GameMechanics implements Tickable, Comparable {
 
             //System.out.println(pawn + " - " + direction + " - " + pawn.counter++);
 
-//            if (pawn.movedPerTickY && ((direction.equals("UP") || direction.equals("DOWN")))) {
-//                continue;
-//            }
-//            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
-//                continue;
-//            }
+            if (pawn.movedPerTickY && ((direction.equals("UP") || direction.equals("DOWN")))) {
+                System.out.println("skip");
+                continue;
+            }
+            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
+                System.out.println("skip");
+                continue;
+            }
 
+            System.out.println("\t" + pawn);
 
 //            if(pawn.movedPerTickY && pawn.movedPerTickX) {
 //                break;
@@ -223,8 +233,16 @@ public class GameMechanics implements Tickable, Comparable {
                 //System.out.println("\tReplica sent#" + replica.counter++ + "\n");
             }
         }
+//
+//        if(inputQueue.size() > 0 || bombs.size() > 0) {
+//            replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
+//            System.out.println("Replica was sent");
+//        }
 
-        replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
+        if(inputQueue.size() > 0) {
+            replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
+            System.out.println("Replica was sent");
+        }
 //        fires.clear();
 //        firesLeft.clear();
 //        destroyedWoods.clear();
