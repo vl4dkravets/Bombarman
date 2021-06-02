@@ -9,17 +9,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_W = 847 - 15;
     private final int GAME_FIELD_H = 527 - 15;
 
-
     private final double pawnStepSize = 2.5;
-
-    public long start = System.currentTimeMillis();
-    public boolean showPosStats = true;
 
     private final ArrayList<Pawn> pawns;
     private final ArrayList<Player> players;
@@ -51,7 +46,7 @@ public class GameMechanics implements Tickable, Comparable {
         replica = new Replica(gameSession.getPlayers());
 
         createWallsAndWoods();
-        createPawns();
+        createPawnsAndBombs();
         replica.writeReplicaToInitializeGameField(pawns, bombs, woods, walls, Topic.START);
     }
 
@@ -97,10 +92,9 @@ public class GameMechanics implements Tickable, Comparable {
 //        }
         walls.add(new Wall(0, new Position(TILE_SIZE+800, TILE_SIZE)));
         walls.add(new Wall(1, new Position(TILE_SIZE+800, TILE_SIZE*2)));
-        //replica.writeReplicaToInitializeGameField(woods, walls, Topic.START);
     }
 
-    private void createPawns(){
+    private void createPawnsAndBombs(){
         // create the pawns for each player to control
         for(int i = 0; i < nOfPawns; i++){
             pawns.add(new Pawn(i, players.get(i).getName(),"Pawn_"+i));
@@ -109,14 +103,11 @@ public class GameMechanics implements Tickable, Comparable {
         Pawn pawn1 = pawns.get(0);
         Pawn pawn2 = pawns.get(1);
         pawn1.setPosition(TILE_SIZE, TILE_SIZE);
-        //pawn2.setPosition(GAME_FIELD_W-TILE_SIZE, GAME_FIELD_H-TILE_SIZE);
         pawn2.setPosition(TILE_SIZE, TILE_SIZE*2);
         pawn1.setBomb(new Bomb(pawn1.getPosition()));
         pawn2.setBomb(new Bomb(pawn2.getPosition()));
         bombs.add(pawn1.getBomb());
         bombs.add(pawn2.getBomb());
-
-        //replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
     }
 
     private void handleGameOver(long elapsed) {
@@ -127,6 +118,12 @@ public class GameMechanics implements Tickable, Comparable {
         }
     }
 
+    private void setUpBomb(Bomb bomb, Pawn pawn, long elapsed) {
+        bomb.setPosition(new Position(bomb.getPosition().getX(), bomb.getPosition().getY()));
+        pawn.setBomb(new Bomb(pawn.getPosition()));
+        bombs.add(pawn.getBomb());
+        updatePlantedBombsTimers(elapsed);
+    }
 
     @Override
     public void tick(long elapsed) {
@@ -137,115 +134,81 @@ public class GameMechanics implements Tickable, Comparable {
         List<Message> inputQueue = gameSession.getInputQueue();
         updatePlantedBombsTimers(elapsed);
 
-        boolean breakOut = false;
-
-//        if(showPosStats) {
-//            System.out.println("Entering tick loop");
-//        }
-        System.out.println("Inputqueue size: " + inputQueue.size());
+        //System.out.println("Inputqueue size: " + inputQueue.size());
 
         for (Message message : inputQueue) {
+            Pawn pawn = pawns.stream().filter(pawn1 -> pawn1.getPlayerName().equals(message.getPlayerName())).findFirst().get();
 
-            Topic topic = message.getTopic();
-            String messageData = message.getData();
-            String playerName = message.getPlayerName();
-            Pawn pawn = pawns.stream().filter(pawn1 -> pawn1.getPlayerName().equals(playerName)).findFirst().get();
+            if (message.getTopic() == Topic.PLANT_BOMB) {
+                setUpBomb(pawn.getBomb(), pawn, elapsed);
+                continue;
+            }
+
             Position pawnPosition = pawn.getPosition();
             String direction;
-
-            if (topic == Topic.PLANT_BOMB) {
-                Bomb bomb = pawn.getBomb();
-                bomb.setPosition(new Position(bomb.getPosition().getX(), bomb.getPosition().getY()));
-
-                pawn.setBomb(new Bomb(pawn.getPosition()));
-                bombs.add(pawn.getBomb());
-                updatePlantedBombsTimers(elapsed);
-                continue;
-            }
-
+            String messageData = message.getData();
             direction = messageData.substring(messageData.indexOf(":") + 2, messageData.indexOf("}") - 1);
 
-
-            //System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
-//            if (pawn.movedPerTickY && ((direction.equals("UP") || direction.equals("DOWN")))) {
-//                //System.out.println("skip");
-//                continue;
-//            }
-//
-//            //System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
-//            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
-//                //System.out.println("skip");
-//                continue;
-//            }
-
             //if a pawn already made a move during this tick - skip the rest of redundant MOVE commands
-            System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
-            System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
+//            System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
+//            System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
             if ((pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) ||
                     (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT")))) {
-                System.out.println("skip");
+                //System.out.println("skip");
                 continue;
             }
 
-            System.out.println("\t" + pawn);
-
-//            if(pawn.movedPerTickY && pawn.movedPerTickX) {
-//                break;
-//            }
+            //System.out.println("\t" + pawn);
 
             double newX = pawnPosition.getX();
             double newY = pawnPosition.getY();
-            boolean canMove = false;
 
             switch (direction) {
                 case "UP":
                     newY += pawnStepSize;
-                    canMove = checkIfPawnDidntStuck(newX, newY, pawn);
-                    if (canMove) {
+                    if (checkIfPawnDidntStuck(newX, newY, pawn)) {
                         pawnPosition.setY(newY);
 
                         pawn.movedPerTickY = true;
-                        System.out.println("\t" + pawn + ": " + direction);
+                        //System.out.println("\t" + pawn + ": " + direction);
                     }
                     break;
                 case "DOWN":
                     newY -= pawnStepSize;
-                    canMove = checkIfPawnDidntStuck(newX, newY, pawn);
-                    if (canMove) {
+                    if (checkIfPawnDidntStuck(newX, newY, pawn)) {
                         pawnPosition.setY(newY);
 
                         pawn.movedPerTickY = true;
-                        System.out.println("\t" + pawn + ": " + direction);
+                        //System.out.println("\t" + pawn + ": " + direction);
                     }
                     break;
                 case "LEFT":
                     newX -= pawnStepSize;
-                    canMove = checkIfPawnDidntStuck(newX, newY, pawn);
-                    if (canMove) {
+                    if (checkIfPawnDidntStuck(newX, newY, pawn)) {
                         pawnPosition.setX(newX);
 
                         pawn.movedPerTickX = true;
-                        System.out.println("\t" + pawn + ": " + direction);
+                        //System.out.println("\t" + pawn + ": " + direction);
                     }
                     break;
                 case "RIGHT":
                     newX += pawnStepSize;
-                    canMove = checkIfPawnDidntStuck(newX, newY, pawn);
-                    if (canMove) {
+                    if (checkIfPawnDidntStuck(newX, newY, pawn)) {
                         pawnPosition.setX(newX);
 
                         pawn.movedPerTickX = true;
-                        System.out.println("\t" + pawn + ": " + direction);
+                        //System.out.println("\t" + pawn + ": " + direction);
                     }
                     break;
             }
             pawn.setDirection(direction);
         }
-//
-//        if(inputQueue.size() > 0 || bombs.size() > 0) {
-//            replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
-//            System.out.println("Replica was sent");
-//        }
+
+        Pawn pawnAuto = pawns.get(0);
+        double x = pawnAuto.getPosition().getX()+pawnStepSize;
+        double y = pawnAuto.getPosition().getY();
+        pawnAuto.setPosition(x,y);
+
 
         replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
         fires.clear();
@@ -253,30 +216,12 @@ public class GameMechanics implements Tickable, Comparable {
         destroyedWoods.clear();
         //System.out.println("Replica was sent");
 
-//        fires.clear();
-//        firesLeft.clear();
-//        destroyedWoods.clear();
-
-//        if(showPosStats) {
-//            System.out.println("Ending tick loop\n");
-//        }
-
+        //reinitialize variables for the next tick
         for (Pawn p : pawns) {
             p.movedPerTickY = false;
             p.movedPerTickX = false;
         }
-
-//        long val = System.currentTimeMillis() - start;
-//        if (val > 5_000 && showPosStats) {
-//            pawns.forEach(p -> {
-//                System.out.println(p + ": " + p.getPosition().posChanged);
-//            });
-//            showPosStats = false;
-//        }
-
     }
-
-
 
     private void updatePlantedBombsTimers(long elapsed) {
         //  increment timer for the the rest of bombs which were planted
@@ -290,13 +235,6 @@ public class GameMechanics implements Tickable, Comparable {
                 handleFires(bomb.getPosition());
             }
         }
-
-//        Pawn pawnAuto = pawns.get(1);
-//        double x = pawnAuto.getPosition().getX()+pawnStepSize;
-//        double y = pawnAuto.getPosition().getY();
-//        pawnAuto.setPosition(x,y);
-
-        //replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
     }
 
     private void handleFires(Position explosionPosition){
