@@ -36,7 +36,7 @@ InputEngine.prototype.setupBindings = function() {
         40 : this.onKeyDown
     }, 0);
 
-    document.addEventListener('keydown', this.onKeyDown);
+    document.addEventListener('keypress', this.onKeyDown);
     document.addEventListener('keyup', this.onKeyUp);
 };
 
