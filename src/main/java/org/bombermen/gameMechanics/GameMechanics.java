@@ -135,14 +135,14 @@ public class GameMechanics implements Tickable, Comparable {
         }
 
         List<Message> inputQueue = gameSession.getInputQueue();
-        handlePlantedBomb(elapsed);
+        updatePlantedBombsTimers(elapsed);
 
         boolean breakOut = false;
 
 //        if(showPosStats) {
 //            System.out.println("Entering tick loop");
 //        }
-        //System.out.println("Inputqueue size: " + inputQueue.size());
+        System.out.println("Inputqueue size: " + inputQueue.size());
 
         for (Message message : inputQueue) {
 
@@ -159,22 +159,28 @@ public class GameMechanics implements Tickable, Comparable {
 
                 pawn.setBomb(new Bomb(pawn.getPosition()));
                 bombs.add(pawn.getBomb());
-                handlePlantedBomb(elapsed);
-                continue;
-            } else {
-                direction = messageData.substring(messageData.indexOf(":") + 2, messageData.indexOf("}") - 1);
-            }
-
-            //System.out.println(pawn + " - " + direction + " - " + pawn.counter++);
-
-            System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
-            if (pawn.movedPerTickY && ((direction.equals("UP") || direction.equals("DOWN")))) {
-                System.out.println("skip");
+                updatePlantedBombsTimers(elapsed);
                 continue;
             }
 
-            System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
-            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
+            direction = messageData.substring(messageData.indexOf(":") + 2, messageData.indexOf("}") - 1);
+
+
+            //System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
+//            if (pawn.movedPerTickY && ((direction.equals("UP") || direction.equals("DOWN")))) {
+//                //System.out.println("skip");
+//                continue;
+//            }
+//
+//            //System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
+//            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
+//                //System.out.println("skip");
+//                continue;
+//            }
+
+            //if a pawn already made a move during this tick - skip the rest of redundant MOVE commands
+            if ((pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) ||
+                    (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT")))) {
                 System.out.println("skip");
                 continue;
             }
@@ -232,11 +238,6 @@ public class GameMechanics implements Tickable, Comparable {
                     break;
             }
             pawn.setDirection(direction);
-
-            if (canMove) {
-                //replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
-                //System.out.println("\tReplica sent#" + replica.counter++ + "\n");
-            }
         }
 //
 //        if(inputQueue.size() > 0 || bombs.size() > 0) {
@@ -244,10 +245,12 @@ public class GameMechanics implements Tickable, Comparable {
 //            System.out.println("Replica was sent");
 //        }
 
-        if(inputQueue.size() > 0) {
-            replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
-            System.out.println("Replica was sent");
-        }
+        replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
+        fires.clear();
+        firesLeft.clear();
+        destroyedWoods.clear();
+        //System.out.println("Replica was sent");
+
 //        fires.clear();
 //        firesLeft.clear();
 //        destroyedWoods.clear();
@@ -273,18 +276,16 @@ public class GameMechanics implements Tickable, Comparable {
 
 
 
-    private void handlePlantedBomb(long elapsed) {
+    private void updatePlantedBombsTimers(long elapsed) {
         //  increment timer for the the rest of bombs which were planted
         Iterator<Bomb> iterator = bombs.iterator();
         while(iterator.hasNext()) {
             Bomb bomb = iterator.next();
-            boolean exploded = bomb.updateBombTimerAndCheck(elapsed);
 
-            if (exploded) {
+            if (bomb.updateBombTimerAndCheck(elapsed)) {
                 // System.out.println(bomb + " HAS EXPLODED!!");
                 iterator.remove();
                 handleFires(bomb.getPosition());
-
             }
         }
 
@@ -364,9 +365,9 @@ public class GameMechanics implements Tickable, Comparable {
         }
 
         //replica.writeReplica(pawns, bombs, firesLeft, destroyedWoods, Topic.REPLICA);
-        fires.clear();
-        firesLeft.clear();
-        destroyedWoods.clear();
+//        fires.clear();
+//        firesLeft.clear();
+//        destroyedWoods.clear();
     }
 
     private boolean checkIfPawnDidntStuck(double currentX, double currentY, Pawn currentPawn) {
