@@ -34,7 +34,7 @@ InputEngine.prototype.setupBindings = function() {
         38 : this.onKeyDown,
         39 : this.onKeyDown,
         40 : this.onKeyDown
-    }, 1000 / this.fps);
+    }, 1);
 
     document.addEventListener('keypress', this.onKeyDown);
     document.addEventListener('keyup', this.onKeyUp);
