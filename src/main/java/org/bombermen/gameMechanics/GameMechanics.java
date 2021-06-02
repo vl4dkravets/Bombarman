@@ -15,7 +15,7 @@ public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_W = 847 - 15;
     private final int GAME_FIELD_H = 527 - 15;
 
-    private final double pawnStepSize = 3;
+    private final double pawnStepSize = 1.2;
     public long start = System.currentTimeMillis();
     public boolean showPosStats = true;
 
@@ -166,16 +166,16 @@ public class GameMechanics implements Tickable, Comparable {
             //System.out.println(pawn + " - " + direction + " - " + pawn.counter++);
 
             //System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
-            if (pawn.movedPerTickY && ((direction.equals("UP") || direction.equals("DOWN")))) {
-                //System.out.println("skip");
-                continue;
-            }
-
-            //System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
-            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
-                //System.out.println("skip");
-                continue;
-            }
+//            if (pawn.movedPerTickY && ((direction.equals("UP") || direction.equals("DOWN")))) {
+//                //System.out.println("skip");
+//                continue;
+//            }
+//
+//            //System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
+//            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
+//                //System.out.println("skip");
+//                continue;
+//            }
 
             //System.out.println("\t" + pawn);
 
