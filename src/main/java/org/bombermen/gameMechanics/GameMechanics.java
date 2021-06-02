@@ -119,7 +119,7 @@ public class GameMechanics implements Tickable, Comparable {
     @Override
     public void tick(long elapsed) {
         List<Message> inputQueue = gameSession.getInputQueue();
-        handlePlantedBomb(elapsed);
+        //handlePlantedBomb(elapsed);
 
         if (firstDeadPawn != null) {
             GAME_END_PAUSE -= elapsed;
@@ -225,7 +225,7 @@ public class GameMechanics implements Tickable, Comparable {
             pawn.setDirection(direction);
 
             if (canMove) {
-                replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
+                //replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
                 //System.out.println("\tReplica sent#" + replica.counter++ + "\n");
             }
         }
