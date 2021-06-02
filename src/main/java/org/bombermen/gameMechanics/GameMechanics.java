@@ -179,6 +179,8 @@ public class GameMechanics implements Tickable, Comparable {
 //            }
 
             //if a pawn already made a move during this tick - skip the rest of redundant MOVE commands
+            System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
+            System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
             if ((pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) ||
                     (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT")))) {
                 System.out.println("skip");
@@ -203,7 +205,7 @@ public class GameMechanics implements Tickable, Comparable {
                         pawnPosition.setY(newY);
 
                         pawn.movedPerTickY = true;
-                        //System.out.println("\t" + pawn + ": " + pawn.getPosition());
+                        System.out.println("\t" + pawn + ": " + direction);
                     }
                     break;
                 case "DOWN":
@@ -213,7 +215,7 @@ public class GameMechanics implements Tickable, Comparable {
                         pawnPosition.setY(newY);
 
                         pawn.movedPerTickY = true;
-                        //System.out.println("\t" + pawn + ": " + pawn.getPosition());
+                        System.out.println("\t" + pawn + ": " + direction);
                     }
                     break;
                 case "LEFT":
@@ -223,7 +225,7 @@ public class GameMechanics implements Tickable, Comparable {
                         pawnPosition.setX(newX);
 
                         pawn.movedPerTickX = true;
-                        //System.out.println("\t" + pawn + ": " + pawn.getPosition());
+                        System.out.println("\t" + pawn + ": " + direction);
                     }
                     break;
                 case "RIGHT":
@@ -233,7 +235,7 @@ public class GameMechanics implements Tickable, Comparable {
                         pawnPosition.setX(newX);
 
                         pawn.movedPerTickX = true;
-                        //System.out.println("\t" + pawn + ": " + pawn.getPosition());
+                        System.out.println("\t" + pawn + ": " + direction);
                     }
                     break;
             }
