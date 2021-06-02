@@ -48,9 +48,14 @@ public class Replica {
         //broker.broadcast2(topic, gameElements, players);
     }
 
-    public void writeReplicaToInitializeGameField(ArrayList<Wood> woods, ArrayList<Wall> walls, Topic topic) {
+    public void writeReplicaToInitializeGameField(ArrayList<Pawn> pawns, ArrayList<Bomb> bombs, ArrayList<Wood> woods, ArrayList<Wall> walls, Topic topic) {
         ArrayList<GameElement> gameElements = new ArrayList<>();
 
+        gameElements.addAll(pawns);
+        bombs.forEach(bomb -> {
+            gameElements.add(bomb);
+            bomb.setId(gameElements.indexOf(bomb));
+        });
         gameElements.addAll(woods);
         gameElements.addAll(walls);
 

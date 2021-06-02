@@ -26,13 +26,7 @@ MessageBroker.prototype.handleBeginning = function (msg) {
     var gameObjects = JSON.parse(msg.data);
     for (var i = 0; i < gameObjects.length; i++) {
         var obj = gameObjects[i];
-        var position = gMessageBroker.mirrorPosition(obj.position);
-        if (obj.type === 'Wall' || obj.type === 'Wood') {
-            new Tile(obj.id, position, obj.type);
-    	}
-    	else if(obj.type === 'Pawn') {
-            gGameEngine.game.players.push(new Player(obj.id, position));
-    	}
+    	gMessageBroker.handler[obj.type](obj);
     }
 };
 

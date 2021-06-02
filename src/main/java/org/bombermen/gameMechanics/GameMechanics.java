@@ -52,6 +52,7 @@ public class GameMechanics implements Tickable, Comparable {
 
         createWallsAndWoods();
         createPawns();
+        replica.writeReplicaToInitializeGameField(pawns, bombs, woods, walls, Topic.START);
     }
 
     private void createWallsAndWoods() {
@@ -96,7 +97,7 @@ public class GameMechanics implements Tickable, Comparable {
 //        }
         walls.add(new Wall(0, new Position(TILE_SIZE+800, TILE_SIZE)));
         walls.add(new Wall(1, new Position(TILE_SIZE+800, TILE_SIZE*2)));
-        replica.writeReplicaToInitializeGameField(woods, walls, Topic.START);
+        //replica.writeReplicaToInitializeGameField(woods, walls, Topic.START);
     }
 
     private void createPawns(){
@@ -115,27 +116,26 @@ public class GameMechanics implements Tickable, Comparable {
         bombs.add(pawn1.getBomb());
         bombs.add(pawn2.getBomb());
 
-        replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
+        //replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
     }
+
+    private void handleGameOver(long elapsed) {
+        GAME_END_PAUSE -= elapsed;
+        if (GAME_END_PAUSE <= 0) {
+            replica.writeReplicaGameOver(firstDeadPawn);
+            Thread.currentThread().interrupt();
+        }
+    }
+
 
     @Override
     public void tick(long elapsed) {
-        List<Message> inputQueue = gameSession.getInputQueue();
-        //handlePlantedBomb(elapsed);
-
         if (firstDeadPawn != null) {
-            GAME_END_PAUSE -= elapsed;
-            if (GAME_END_PAUSE <= 0) {
-                handleGameOver();
-                Thread.currentThread().interrupt();
-            }
-            return;
+            handleGameOver(elapsed);
         }
 
-        if(System.currentTimeMillis()-start>=15_000){
-            handleGameOver();
-            Thread.currentThread().interrupt();
-        }
+        List<Message> inputQueue = gameSession.getInputQueue();
+        handlePlantedBomb(elapsed);
 
         boolean breakOut = false;
 
@@ -271,9 +271,7 @@ public class GameMechanics implements Tickable, Comparable {
 
     }
 
-    private void handleGameOver() {
-        replica.writeReplicaGameOver(firstDeadPawn);
-    }
+
 
     private void handlePlantedBomb(long elapsed) {
         //  increment timer for the the rest of bombs which were planted
