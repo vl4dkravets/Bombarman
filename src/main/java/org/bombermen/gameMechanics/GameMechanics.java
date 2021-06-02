@@ -16,7 +16,7 @@ public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_H = 527 - 15;
 
 
-    private final double pawnStepSize = 1.2;
+    private final double pawnStepSize = 2.5;
 
     public long start = System.currentTimeMillis();
     public boolean showPosStats = true;
@@ -132,10 +132,10 @@ public class GameMechanics implements Tickable, Comparable {
             return;
         }
 
-//        if(System.currentTimeMillis()-start>=10_000){
-//            handleGameOver();
-//            Thread.currentThread().interrupt();
-//        }
+        if(System.currentTimeMillis()-start>=15_000){
+            handleGameOver();
+            Thread.currentThread().interrupt();
+        }
 
         boolean breakOut = false;
 
@@ -167,19 +167,19 @@ public class GameMechanics implements Tickable, Comparable {
 
             //System.out.println(pawn + " - " + direction + " - " + pawn.counter++);
 
-            //System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
-//            if (pawn.movedPerTickY && ((direction.equals("UP") || direction.equals("DOWN")))) {
-//                //System.out.println("skip");
-//                continue;
-//            }
-//
-//            //System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
-//            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
-//                //System.out.println("skip");
-//                continue;
-//            }
+            System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
+            if (pawn.movedPerTickY && ((direction.equals("UP") || direction.equals("DOWN")))) {
+                System.out.println("skip");
+                continue;
+            }
 
-            //System.out.println("\t" + pawn);
+            System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
+            if (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT"))) {
+                System.out.println("skip");
+                continue;
+            }
+
+            System.out.println("\t" + pawn);
 
 //            if(pawn.movedPerTickY && pawn.movedPerTickX) {
 //                break;
@@ -246,7 +246,7 @@ public class GameMechanics implements Tickable, Comparable {
 
         if(inputQueue.size() > 0) {
             replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
-            //System.out.println("Replica was sent");
+            System.out.println("Replica was sent");
         }
 //        fires.clear();
 //        firesLeft.clear();
