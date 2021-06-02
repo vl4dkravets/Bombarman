@@ -14,6 +14,7 @@ var ClusterSetting = function () {
 //        path: '/matchmaker/join'
 //    };
 
+
     this.gameServer = {
         protocol: 'wss',
         host: 'bomberman-by-vlad.herokuapp.com',
