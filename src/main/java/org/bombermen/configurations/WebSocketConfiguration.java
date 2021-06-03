@@ -9,14 +9,6 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @Configuration
 @EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
-//    @Autowired
-//    private EventHandler eventHandler;
-//
-//    @Bean
-//    @Scope("prototype")
-//    public EventHandler personSingleton() {
-//        return new EventHandler();
-//    }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {

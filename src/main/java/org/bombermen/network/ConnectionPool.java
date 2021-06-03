@@ -17,64 +17,32 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ConnectionPool {
     private static final Logger log = LoggerFactory.getLogger(ConnectionPool.class);
     private static final ConnectionPool instance = new ConnectionPool();
-    private static final int PARALLELISM_LEVEL = 2;
+    private final int PARALLELISM_LEVEL;
     private final AtomicInteger playerNumber;
     private final ConcurrentHashMap<WebSocketSession, String> pool;
 
-    public HashMap<String, Integer> pressesSent = new HashMap<>();
-
-    public static ConnectionPool getInstance() {
-        return instance;
-    }
+    //public HashMap<String, Integer> pressesSent = new HashMap<>();
 
     private ConnectionPool() {
         pool = new ConcurrentHashMap<>();
         playerNumber = new AtomicInteger(1);
+        PARALLELISM_LEVEL = 2;
     }
 
     public void send(@NotNull WebSocketSession session, @NotNull String msg) {
         if (session.isOpen()) {
             try {
                 session.sendMessage(new TextMessage(msg));
-                if(pressesSent.containsKey(session.getId())) {
-                    pressesSent.compute(session.getId(), (key, value) -> value+1);
-                }
-                else {
-                    pressesSent.put(session.getId(), 0);
-                }
-                //System.out.println("Sent: " + pressCounter);
-
-                // System.out.println("message was sent:\n");
-                // System.out.println(msg);
+//                if(pressesSent.containsKey(session.getId())) {
+//                    pressesSent.compute(session.getId(), (key, value) -> value+1);
+//                }
+//                else {
+//                    pressesSent.put(session.getId(), 0);
+//                }
             } catch (IOException ignored) {
             }
         }
     }
-
-
-//    public void broadcast(@NotNull String msg) {
-//        pool.forEachKey(PARALLELISM_LEVEL, session -> send(session, msg));
-//    }
-
-//    public void broadcast1(@NotNull String msg, ArrayList<Player> players) {
-//        pool.forEachKey(PARALLELISM_LEVEL, session -> {
-//            int i = 0;
-//             for(Player p: players) {
-//                 if (p.getName().equals(session.getId())) {
-//                     send(session, msg);
-//                     i++;
-//                 }
-//                 if(i > 1) break;
-//             }
-//        });
-//    }
-//
-//        public void broadcast2(@NotNull String msg, ArrayList<Player> players) {
-//            //pool.forEachKey(PARALLELISM_LEVEL, session -> send(session, msg));
-//            ArrayList<WebSocketSession> targetSessions = new ArrayList<>();
-//            players.forEach(player -> targetSessions.add(getSession(player.getName())));
-//            targetSessions.stream().parallel().forEach(session -> send(session, msg));
-//    }
 
     public void shutdown() {
         pool.forEachKey(PARALLELISM_LEVEL, session -> {
@@ -107,5 +75,9 @@ public class ConnectionPool {
 
     public void remove(WebSocketSession session) {
         pool.remove(session);
+    }
+
+    public static ConnectionPool getInstance() {
+        return instance;
     }
 }

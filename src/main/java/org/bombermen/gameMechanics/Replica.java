@@ -9,8 +9,6 @@ public class Replica {
     private final ArrayList<Player> players;
     private final Broker broker;
 
-    public int counter;
-
     public Replica(ArrayList<Player> players) {
         this.players = players;
         broker = Broker.getInstance();
@@ -39,13 +37,8 @@ public class Replica {
             bomb.setId(gameElements.indexOf(bomb));
         });
 
-//        for(Player player: players) {
-//            broker.send(player.getName(), topic, gameElements);
-//        }
 
         players.stream().parallel().forEach(player -> broker.send(player.getName(), topic, gameElements));
-        // broker.broadcast1(topic, gameElements, players);
-        //broker.broadcast2(topic, gameElements, players);
     }
 
     public void writeReplicaToInitializeGameField(ArrayList<Pawn> pawns, ArrayList<Bomb> bombs, ArrayList<Wood> woods, ArrayList<Wall> walls, Topic topic) {

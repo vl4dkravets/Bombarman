@@ -18,18 +18,14 @@ public class Broker {
     //private static final Logger log = LoggerFactory.getLogger(Broker.class);
     private static final Broker instance = new Broker();
     private final ConnectionPool connectionPool;
-    public static Broker getInstance() {
-        return instance;
-    }
+    private final GameService gameService;
+
     private Broker() {
         this.connectionPool = ConnectionPool.getInstance();
+        this.gameService = GameService.getInstance();
     }
 
     public void receive(@NotNull WebSocketSession session, @NotNull String msg) throws InterruptedException {
-        //log.info("RECEIVED: " + msg);
-        //TODO TASK2 implement message processing
-        GameService gameService = GameService.getInstance();
-
         String gameID = retrieveGameIdFromQuery(Objects.requireNonNull(session.getUri()).getQuery());
         GameSession gameSession1 = gameService.getGames().get(gameID);
         if(gameSession1 != null) {
@@ -37,33 +33,19 @@ public class Broker {
             message1.setPlayerName(session.getId());
             gameSession1.pushMessage(message1);
         }
-
     }
 
     public void send(@NotNull String player, @NotNull Topic topic, @NotNull Object object) {
         String message = JsonHelper.toJson(new Message(topic, JsonHelper.toJson(object)));
         WebSocketSession session = connectionPool.getSession(player);
         connectionPool.send(session, message);
-        // System.out.println(message);
     }
-
-//    public void broadcast(@NotNull Topic topic, @NotNull Object object) {
-//        String message = JsonHelper.toJson(new Message(topic, JsonHelper.toJson(object)));
-//        connectionPool.broadcast(message);
-//    }
-
-//    public void broadcast1(@NotNull Topic topic, @NotNull Object object, ArrayList<Player> players) {
-//        String message = JsonHelper.toJson(new Message(topic, JsonHelper.toJson(object)));
-//        connectionPool.broadcast1(message, players);
-//    }
-//
-//    public void broadcast2(@NotNull Topic topic, @NotNull Object object, ArrayList<Player> players) {
-//        String message = JsonHelper.toJson(new Message(topic, JsonHelper.toJson(object)));
-//        connectionPool.broadcast2(message, players);
-//    }
 
     private String retrieveGameIdFromQuery(String query) {
         return query.substring(query.indexOf("=")+1, query.indexOf("&"));
     }
 
+    public static Broker getInstance() {
+        return instance;
+    }
 }
