@@ -92,8 +92,8 @@ public class GameMechanics implements Tickable, Comparable {
 //                }
 //            }
 //        }
-        walls.add(new Wall(0, new Position(TILE_SIZE+200, TILE_SIZE)));
-        walls.add(new Wall(1, new Position(TILE_SIZE+200, TILE_SIZE*2)));
+        walls.add(new Wall(0, new Position(TILE_SIZE+800, TILE_SIZE)));
+        walls.add(new Wall(1, new Position(TILE_SIZE+800, TILE_SIZE*2)));
     }
 
     private void createPawnsAndBombs(){
@@ -126,6 +126,15 @@ public class GameMechanics implements Tickable, Comparable {
         bombs.add(pawn.getBomb());
         updatePlantedBombsTimers(elapsed);
     }
+
+    //updates coordinates automatically, so first pawn walks by itself
+    private void pawnRobot() {
+        Pawn pawnAuto = pawns.get(0);
+        double x = pawnAuto.getPosition().getX()+pawnStepSize;
+        double y = pawnAuto.getPosition().getY();
+        pawnAuto.setPosition(x,y);
+    }
+
 
     @Override
     public void tick(long elapsed) {
@@ -206,11 +215,7 @@ public class GameMechanics implements Tickable, Comparable {
             pawn.setDirection(direction);
         }
 
-//        Pawn pawnAuto = pawns.get(0);
-//        double x = pawnAuto.getPosition().getX()+pawnStepSize;
-//        double y = pawnAuto.getPosition().getY();
-//        pawnAuto.setPosition(x,y);
-
+        //pawnRobot();
 
         replica.writeReplica(pawns, bombs, firesLeft, destroyedWoods, Topic.REPLICA);
         firesLeft.clear();
