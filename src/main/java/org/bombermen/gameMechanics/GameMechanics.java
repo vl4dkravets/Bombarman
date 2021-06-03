@@ -21,7 +21,6 @@ public class GameMechanics implements Tickable, Comparable {
     private final ArrayList<Wall> walls;
     private final ArrayList<Wood> woods;
     private final ArrayList<Bomb> bombs;
-    //private final ArrayList<Fire> fires;
     private final ArrayList<Fire> firesLeft;
     private final ArrayList<Wood> destroyedWoods;
     private final int nOfPawns;
@@ -31,7 +30,6 @@ public class GameMechanics implements Tickable, Comparable {
     private Pawn firstDeadPawn;
     private long GAME_END_PAUSE = 3000;
     private final ArrayList<Position> firesDefaultPositions;
-
 
     public GameMechanics(GameSession gameSession) {
         TILE_SIZE = 32;

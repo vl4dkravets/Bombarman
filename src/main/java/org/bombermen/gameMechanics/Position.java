@@ -3,7 +3,6 @@ package org.bombermen.gameMechanics;
 public class Position {
     private double x;
     private double y;
-    public int posChanged;
     private final int tileSize = 28;
 
     public Position(double x, double y) {
@@ -16,14 +15,12 @@ public class Position {
     }
     public void setX(double x) {
         this.x = x;
-        posChanged++;
     }
     public double getY() {
         return y;
     }
     public void setY(double y) {
         this.y = y;
-        posChanged++;
     }
 
     @Override

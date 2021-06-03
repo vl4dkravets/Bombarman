@@ -65,7 +65,6 @@ public abstract class GameElement {
         this.direction = direction;
     }
 
-
     public Position getTopLeftPoint() {
         return new Position(getPosition().getX(), getPosition().getY()+tileSize);
     }
@@ -73,7 +72,6 @@ public abstract class GameElement {
     public Position getBottomRightPoint() {
         return new Position(getPosition().getX()+tileSize, getPosition().getY());
     }
-
 
     public double getTileSize() {
         return tileSize;
