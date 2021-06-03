@@ -21,7 +21,7 @@ public class GameMechanics implements Tickable, Comparable {
     private final ArrayList<Wall> walls;
     private final ArrayList<Wood> woods;
     private final ArrayList<Bomb> bombs;
-    private final ArrayList<Fire> fires;
+    //private final ArrayList<Fire> fires;
     private final ArrayList<Fire> firesLeft;
     private final ArrayList<Wood> destroyedWoods;
     private final int nOfPawns;
@@ -30,6 +30,7 @@ public class GameMechanics implements Tickable, Comparable {
     private final int TILE_SIZE;
     private Pawn firstDeadPawn;
     private long GAME_END_PAUSE = 3000;
+    private final ArrayList<Position> firesDefaultPositions;
 
     public GameMechanics(GameSession gameSession) {
         TILE_SIZE = 32;
@@ -37,7 +38,8 @@ public class GameMechanics implements Tickable, Comparable {
         walls = new ArrayList<>();
         woods = new ArrayList<>();
         bombs = new ArrayList<>();
-        fires = new ArrayList<>();
+        //fires = new ArrayList<>();
+        firesDefaultPositions = new ArrayList<>();
         firesLeft = new ArrayList<>();
         destroyedWoods = new ArrayList<>();
         this.gameSession = gameSession;
@@ -90,8 +92,8 @@ public class GameMechanics implements Tickable, Comparable {
 //                }
 //            }
 //        }
-        walls.add(new Wall(0, new Position(TILE_SIZE+800, TILE_SIZE)));
-        walls.add(new Wall(1, new Position(TILE_SIZE+800, TILE_SIZE*2)));
+        walls.add(new Wall(0, new Position(TILE_SIZE+200, TILE_SIZE)));
+        walls.add(new Wall(1, new Position(TILE_SIZE+200, TILE_SIZE*2)));
     }
 
     private void createPawnsAndBombs(){
@@ -204,15 +206,15 @@ public class GameMechanics implements Tickable, Comparable {
             pawn.setDirection(direction);
         }
 
-        Pawn pawnAuto = pawns.get(0);
-        double x = pawnAuto.getPosition().getX()+pawnStepSize;
-        double y = pawnAuto.getPosition().getY();
-        pawnAuto.setPosition(x,y);
+//        Pawn pawnAuto = pawns.get(0);
+//        double x = pawnAuto.getPosition().getX()+pawnStepSize;
+//        double y = pawnAuto.getPosition().getY();
+//        pawnAuto.setPosition(x,y);
 
 
-        replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
-        fires.clear();
+        replica.writeReplica(pawns, bombs, firesLeft, destroyedWoods, Topic.REPLICA);
         firesLeft.clear();
+        firesDefaultPositions.clear();
         destroyedWoods.clear();
         //System.out.println("Replica was sent");
 
@@ -229,6 +231,8 @@ public class GameMechanics implements Tickable, Comparable {
         while(iterator.hasNext()) {
             Bomb bomb = iterator.next();
 
+            if(bombs.indexOf(bomb) == 0) continue;
+
             if (bomb.updateBombTimerAndCheck(elapsed)) {
                 // System.out.println(bomb + " HAS EXPLODED!!");
                 iterator.remove();
@@ -237,48 +241,65 @@ public class GameMechanics implements Tickable, Comparable {
         }
     }
 
-    private void handleFires(Position explosionPosition){
+    private void checkWhetherFireKillsPawn() {
+        //check pawns
+        for(Fire fire: firesLeft){
+            for(Pawn pawn: pawns){
+                if(doOverlap(fire.getTopLeftPoint(), fire.getBottomRightPoint(), pawn.getTopLeftPoint(), pawn.getBottomRightPoint())) {
+                    pawn.setAlive(false);
+                    firstDeadPawn = pawn;
+                    break;
+                }
+            }
+            if(firstDeadPawn != null) {break;}
+        }
+    }
+
+    private void leaveFireWhichDontStuckWithWalls(Position explosionPosition) {
         double x = explosionPosition.getX();
         double y = explosionPosition.getY();
-        fires.add(0, new Fire(fires.size(), new Position(x,y+TILE_SIZE*2)));
-        fires.add(1,new Fire(fires.size(), new Position(x+TILE_SIZE*2,y)));
-        fires.add(2,new Fire(fires.size(), new Position(x,y-TILE_SIZE*2)));
-        fires.add(3, new Fire(fires.size(), new Position(x-TILE_SIZE*2,y)));
-        fires.add(4, new Fire(fires.size(), new Position(x,y+TILE_SIZE)));
-        fires.add(5,new Fire(fires.size(), new Position(x+TILE_SIZE,y)));
-        fires.add(6,new Fire(fires.size(), new Position(x,y-TILE_SIZE)));
-        fires.add(7,new Fire(fires.size(), new Position(x-TILE_SIZE,y)));
-        fires.add(8,new Fire(fires.size(), new Position(x,y)));
 
-        for(int i = 0; i < fires.size(); i++) {
+        firesDefaultPositions.add(new Position(x,y+TILE_SIZE*2));
+        firesDefaultPositions.add(new Position(x+TILE_SIZE*2,y));
+        firesDefaultPositions.add(new Position(x,y-TILE_SIZE*2));
+        firesDefaultPositions.add(new Position(x-TILE_SIZE*2,y));
+        firesDefaultPositions.add(new Position(x,y+TILE_SIZE));
+        firesDefaultPositions.add(new Position(x+TILE_SIZE,y));
+        firesDefaultPositions.add(new Position(x,y-TILE_SIZE));
+        firesDefaultPositions.add(new Position(x-TILE_SIZE,y));
+        firesDefaultPositions.add(new Position(x,y));
+
+        for(int i = 0; i < firesDefaultPositions.size(); i++) {
             boolean doOverlap = false;
-            Fire fire = fires.get(i);
+            Position firePosition = firesDefaultPositions.get(i);
             if(i==8) {
                 // explosion in the center will always happen - no need to check & remove it
-                firesLeft.add(fire);
+                firesLeft.add(new Fire(firesLeft.size(), firePosition));
                 continue;
             }
             for(Wall wall: walls) {
-                if(i < 4){
-                    Fire initialFire = fires.get(i+4);
-                    if(doOverlap(fire.getTopLeftPoint(), fire.getBottomRightPoint(), wall.getTopLeftPoint(), wall.getBottomRightPoint()) ||
-                            doOverlap(initialFire.getTopLeftPoint(), initialFire.getBottomRightPoint(), wall.getTopLeftPoint(), wall.getBottomRightPoint())) {
+                if(i < 4) {
+                    Position initialFirePosition = firesDefaultPositions.get(i+4);
+                    if(doOverlap(firePosition.getTopLeftPoint(), firePosition.getBottomRightPoint(), wall.getTopLeftPoint(), wall.getBottomRightPoint()) ||
+                            doOverlap(initialFirePosition.getTopLeftPoint(), initialFirePosition.getBottomRightPoint(), wall.getTopLeftPoint(), wall.getBottomRightPoint())) {
                         doOverlap=true;
                         break;
                     }
                 }
                 else {
-                    if(doOverlap(fire.getTopLeftPoint(), fire.getBottomRightPoint(), wall.getTopLeftPoint(), wall.getBottomRightPoint())) {
+                    if(doOverlap(firePosition.getTopLeftPoint(), firePosition.getBottomRightPoint(), wall.getTopLeftPoint(), wall.getBottomRightPoint())) {
                         doOverlap=true;
                         break;
                     }
                 }
             }
             if(!doOverlap){
-                firesLeft.add(fire);
+                firesLeft.add(new Fire(firesLeft.size(), firePosition));
             }
         }
+    }
 
+    private void leaveFireWhichDontStuckWithWoods() {
         // check woods
         Iterator<Wood> iterator1;
         for(Fire fire: firesLeft){
@@ -291,23 +312,13 @@ public class GameMechanics implements Tickable, Comparable {
                 }
             }
         }
+    }
 
-        //check pawns
-        for(Fire fire: firesLeft){
-            for(Pawn pawn: pawns){
-                if(doOverlap(fire.getTopLeftPoint(), fire.getBottomRightPoint(), pawn.getTopLeftPoint(), pawn.getBottomRightPoint())) {
-                    pawn.setAlive(false);
-                    firstDeadPawn = pawn;
-                    break;
-                }
-            }
-            if(firstDeadPawn != null) {break;}
-        }
 
-        //replica.writeReplica(pawns, bombs, firesLeft, destroyedWoods, Topic.REPLICA);
-//        fires.clear();
-//        firesLeft.clear();
-//        destroyedWoods.clear();
+    private void handleFires(Position explosionPosition){
+        leaveFireWhichDontStuckWithWalls(explosionPosition);
+        leaveFireWhichDontStuckWithWoods();
+        checkWhetherFireKillsPawn();
     }
 
     private boolean checkIfPawnDidntStuck(double currentX, double currentY, Pawn currentPawn) {
@@ -359,3 +370,5 @@ public class GameMechanics implements Tickable, Comparable {
         return !(l1.getY() <= r2.getY()) && !(l2.getY() <= r1.getY());
     }
 }
+
+

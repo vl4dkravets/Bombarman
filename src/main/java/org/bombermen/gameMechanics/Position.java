@@ -4,6 +4,7 @@ public class Position {
     private double x;
     private double y;
     public int posChanged;
+    private final int tileSize = 28;
 
     public Position(double x, double y) {
         this.x = x;
@@ -41,5 +42,13 @@ public class Position {
                 "x=" + x +
                 ", y=" + y +
                 '}';
+    }
+
+    public Position getTopLeftPoint() {
+        return new Position(getX(), getY()+tileSize);
+    }
+
+    public Position getBottomRightPoint() {
+        return new Position(getX()+tileSize, getY());
     }
 }

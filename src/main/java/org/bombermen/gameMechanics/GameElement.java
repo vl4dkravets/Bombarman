@@ -74,6 +74,7 @@ public abstract class GameElement {
         return new Position(getPosition().getX()+tileSize, getPosition().getY());
     }
 
+
     public double getTileSize() {
         return tileSize;
     }
