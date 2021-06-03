@@ -2,9 +2,9 @@ package org.bombermen.game;
 
 import org.bombermen.message.Message;
 import org.bombermen.services.GameService;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class GameSession {
