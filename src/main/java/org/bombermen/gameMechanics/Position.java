@@ -1,5 +1,8 @@
 package org.bombermen.gameMechanics;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(value = { "tileSize" })
 public class Position {
     private double x;
     private double y;

@@ -1,5 +1,8 @@
 package org.bombermen.gameMechanics;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(value = { "bomb", "movedPerTickX", "movedPerTickY", "pawnName", "playerName", "tileSize" })
 public class Pawn extends GameElement{
     private static final String type = "Pawn";
     private final String playerName;
@@ -7,11 +10,14 @@ public class Pawn extends GameElement{
     private Bomb bomb;
     public boolean movedPerTickX;
     public boolean movedPerTickY;
+    private boolean alive;
+    private String direction;
 
     public Pawn(int id, String playerName, String pawnName) {
         super(id, type, new Position(0,0));
         this.playerName = playerName;
         this.pawnName = pawnName;
+        alive = true;
     }
 
     @Override
@@ -37,5 +43,21 @@ public class Pawn extends GameElement{
     @Override
     public String toString() {
         return pawnName;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 }

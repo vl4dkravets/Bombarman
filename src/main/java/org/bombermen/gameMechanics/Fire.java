@@ -1,5 +1,8 @@
 package org.bombermen.gameMechanics;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(value = { "startTime", "tileSize" })
 public class Fire extends GameElement {
     private static final String type = "Fire";
     // Unique index used by JS to store element in it array

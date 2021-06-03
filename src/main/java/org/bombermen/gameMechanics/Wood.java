@@ -1,5 +1,8 @@
 package org.bombermen.gameMechanics;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(value = { "tileSize" })
 public class Wood extends GameElement{
     private static final int startIndex = 1000;
     private static final String type =  "Wood";

@@ -1,5 +1,8 @@
 package org.bombermen.gameMechanics;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(value = { "startTime", "tileSize" })
 public class Bomb extends GameElement{
     private static final String type =  "Bomb";
     private long startTime;
