@@ -18,14 +18,14 @@ var ClusterSetting = function () {
     this.gameServer = {
         protocol: 'wss',
         host: 'bomberman-by-vlad.herokuapp.com',
-        port: '',
+        port: '8080',
         path: '/events/connect'
     };
 
     this.matchMaker = {
         protocol: 'https',
         host: 'bomberman-by-vlad.herokuapp.com',
-        port: '',
+        port: '8080',
         path: '/matchmaker/join'
     };
 
