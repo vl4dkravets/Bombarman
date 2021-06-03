@@ -3,12 +3,10 @@ package org.bombermen.services;
 import org.bombermen.exceptions.InvalidGameIdException;
 import org.bombermen.game.GameSession;
 import org.bombermen.game.GameThread;
-import org.bombermen.tick.Ticker;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-//@Service
+
 public class GameService {
 
 	private static final GameService gameService = new GameService();
