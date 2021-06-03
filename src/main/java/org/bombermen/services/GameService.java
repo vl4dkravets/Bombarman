@@ -26,7 +26,7 @@ public class GameService {
 	}
 	
 	public void start(GameSession gameSession) {
-		Thread t = new Thread(new GameThread(gameSession, new Ticker()), "gameThread-"+gameSessionCounter.get());
+		Thread t = new Thread(new GameThread(gameSession), "gameThread-"+gameSessionCounter.get());
 		t.start();
 	}
 	

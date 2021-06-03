@@ -7,9 +7,9 @@ public class GameThread implements Runnable {
     private final GameSession gameSession;
     private Ticker ticker;
 
-    public GameThread(GameSession gameSession, Ticker ticker) {
+    public GameThread(GameSession gameSession) {
         this.gameSession = gameSession;
-        this.ticker = ticker;
+        ticker = new Ticker();
     }
 
     @Override

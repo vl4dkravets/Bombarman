@@ -32,6 +32,7 @@ public class GameMechanics implements Tickable, Comparable {
     private long GAME_END_PAUSE = 3000;
     private final ArrayList<Position> firesDefaultPositions;
 
+
     public GameMechanics(GameSession gameSession) {
         TILE_SIZE = 32;
         pawns = new ArrayList<>();
@@ -140,6 +141,9 @@ public class GameMechanics implements Tickable, Comparable {
     public void tick(long elapsed) {
         if (firstDeadPawn != null) {
             handleGameOver(elapsed);
+            if(GAME_END_PAUSE < 0) {
+                return;
+            }
         }
 
         List<Message> inputQueue = gameSession.getInputQueue();
