@@ -30,12 +30,13 @@ public class Replica {
         ArrayList<GameElement> gameElements = new ArrayList<>();
 
         gameElements.addAll(pawns);
-        gameElements.addAll(fires);
-        gameElements.addAll(destroyedWoods);
         bombs.forEach(bomb -> {
             gameElements.add(bomb);
-            bomb.setId(gameElements.indexOf(bomb));
+            bomb.setId(gameElements.size()-1);
         });
+        gameElements.addAll(fires);
+        gameElements.addAll(destroyedWoods);
+
 
 
         players.stream().parallel().forEach(player -> broker.send(player.getName(), topic, gameElements));
@@ -47,7 +48,7 @@ public class Replica {
         gameElements.addAll(pawns);
         bombs.forEach(bomb -> {
             gameElements.add(bomb);
-            bomb.setId(gameElements.indexOf(bomb));
+            bomb.setId(gameElements.size()-1);
         });
         gameElements.addAll(woods);
         gameElements.addAll(walls);
