@@ -143,12 +143,21 @@ public class GameMechanics implements Tickable, Comparable {
             return;
         }
 
+        // Plus 10 extra milliseconds for the method to finish its work before the tick ends
+        long tickStartTime = System.currentTimeMillis()+10;
+
         List<Message> inputQueue = gameSession.getInputQueue();
         updatePlantedBombsTimers(elapsed);
 
         //System.out.println("Inputqueue size: " + inputQueue.size());
 
         for (Message message : inputQueue) {
+            //check whether tick lasts for too long; then store the rest of messages for the next tick and break out
+            if(System.currentTimeMillis() - tickStartTime >= elapsed) {
+                gameSession.saveMessagesForNextTick(inputQueue.subList(inputQueue.indexOf(message),inputQueue.size()));
+                break;
+            }
+
             Pawn pawn = pawns.stream().filter(pawn1 -> pawn1.getPlayerName().equals(message.getPlayerName())).findFirst().get();
 
             if (message.getTopic() == Topic.PLANT_BOMB) {
