@@ -219,10 +219,13 @@ public class GameMechanics implements Tickable, Comparable {
         //pawnRobot();
 
         replica.writeReplica(pawns, bombs, firesLeft, destroyedWoods, Topic.REPLICA);
+        cleanAndPrepareForTheNextTick();
+    }
+
+    private void cleanAndPrepareForTheNextTick() {
         firesLeft.clear();
         firesDefaultPositions.clear();
         destroyedWoods.clear();
-        //System.out.println("Replica was sent");
 
         //reinitialize variables for the next tick
         for (Pawn p : pawns) {
