@@ -2,18 +2,15 @@ package org.bombermen.gameMechanics;
 
 public abstract class GameElement {
     private int id;
-    private String type;
     private Position position;
     private final double tileSize = 28;
 
-    public GameElement(String type, Position position) {
-        this.type = type;
+    public GameElement(Position position) {
         this.position = position;
     }
 
-    public GameElement(int id, String type, Position position) {
+    public GameElement(int id, Position position) {
         this.id = id;
-        this.type = type;
         this.position = position;
     }
 
@@ -23,14 +20,6 @@ public abstract class GameElement {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public Position getPosition() {

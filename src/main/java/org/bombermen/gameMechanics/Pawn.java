@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(value = { "bomb", "movedPerTickX", "movedPerTickY", "pawnName", "playerName", "tileSize" })
 public class Pawn extends GameElement{
-    private static final String type = "Pawn";
+    private final String type = "Pawn";
     private final String playerName;
     private final String pawnName;
     private Bomb bomb;
@@ -14,7 +14,7 @@ public class Pawn extends GameElement{
     private String direction;
 
     public Pawn(int id, String playerName, String pawnName) {
-        super(id, type, new Position(0,0));
+        super(id, new Position(0,0));
         this.playerName = playerName;
         this.pawnName = pawnName;
         alive = true;

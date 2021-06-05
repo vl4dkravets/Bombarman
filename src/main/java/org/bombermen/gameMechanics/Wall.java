@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(value = { "tileSize" })
 public class Wall extends GameElement{
-    private static final int startIndex = 700;
-    private static final String type =  "Wall";
+    private static final int startIndex = 3000;
+    private final String type =  "Wall";
 
     public Wall(int id, Position position) {
-        super(startIndex+id,type, position);
+        super(startIndex+id, position);
     }
 
     @Override

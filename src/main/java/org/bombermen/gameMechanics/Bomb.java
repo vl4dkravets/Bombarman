@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(value = { "startTime", "tileSize" })
 public class Bomb extends GameElement{
-    private static final String type =  "Bomb";
+    private final String type =  "Bomb";
     private long startTime;
-    private static final int startIndex = 100;
+    private static final int startIndex = 1000;
 
     public Bomb(Position position) {
-        super(type, position);
+        super(position);
     }
 
     public boolean updateBombTimerAndCheck(long elapsed) {
