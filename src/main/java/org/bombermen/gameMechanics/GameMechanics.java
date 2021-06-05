@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_W = 847 - 15;
@@ -52,47 +53,47 @@ public class GameMechanics implements Tickable, Comparable {
     }
 
     private void createWallsAndWoods() {
-//        Random random = new Random();
-//        for(int x = 0, column = 0; x <= GAME_FIELD_W; x+=TILE_SIZE, column++) {
-//            for(int y = 0, row = 0; y <= GAME_FIELD_H; y+=TILE_SIZE, row++) {
-//                if(x==0) {
-//                    walls.add(new Wall(walls.size()+1, new Position(x, y)));
-//                }
-//                else if(x == GAME_FIELD_W) {
-//                    walls.add(new Wall(walls.size()+1, new Position(x, y)));
-//                }
-//                else if (column % 2 != 0) {
-//                    if(y==0 || y==GAME_FIELD_H) {
-//                        walls.add(new Wall(walls.size()+1, new Position(x, y)));
-//                    }
-//                    else {
-//                        if(random.nextBoolean()){
-//                            if((x > TILE_SIZE*4 || y > TILE_SIZE*3) && (x < (GAME_FIELD_W - TILE_SIZE*3) || y < (GAME_FIELD_H - TILE_SIZE*4))) {
-//                                woods.add(new Wood(woods.size()+1, new Position(x + 2, y - 2)));
-//                            }
-//                        }
-//                    }
-//
-//                }
-//                else {
-//                    if(y==0 || y==GAME_FIELD_H) {
-//                        walls.add(new Wall(walls.size()+1, new Position(x, y)));
-//                    }
-//                    else if(row % 2 != 0){
-//                        if(random.nextBoolean()){
-//                            if((x > TILE_SIZE*4 || y > TILE_SIZE*4) ) {
-//                                woods.add(new Wood(woods.size()+1, new Position(x + 2, y - 2)));
-//                            }
-//                        }
-//                    }
-//                    else {
-//                        walls.add(new Wall(walls.size()+1, new Position(x, y)));
-//                    }
-//                }
-//            }
-//        }
-        walls.add(new Wall(0, new Position(TILE_SIZE+800, TILE_SIZE)));
-        walls.add(new Wall(1, new Position(TILE_SIZE+800, TILE_SIZE*2)));
+        Random random = new Random();
+        for(int x = 0, column = 0; x <= GAME_FIELD_W; x+=TILE_SIZE, column++) {
+            for(int y = 0, row = 0; y <= GAME_FIELD_H; y+=TILE_SIZE, row++) {
+                if(x==0) {
+                    walls.add(new Wall(walls.size()+1, new Position(x, y)));
+                }
+                else if(x == GAME_FIELD_W) {
+                    walls.add(new Wall(walls.size()+1, new Position(x, y)));
+                }
+                else if (column % 2 != 0) {
+                    if(y==0 || y==GAME_FIELD_H) {
+                        walls.add(new Wall(walls.size()+1, new Position(x, y)));
+                    }
+                    else {
+                        if(random.nextBoolean()){
+                            if((x > TILE_SIZE*4 || y > TILE_SIZE*3) && (x < (GAME_FIELD_W - TILE_SIZE*3) || y < (GAME_FIELD_H - TILE_SIZE*4))) {
+                                woods.add(new Wood(woods.size()+1, new Position(x + 2, y - 2)));
+                            }
+                        }
+                    }
+
+                }
+                else {
+                    if(y==0 || y==GAME_FIELD_H) {
+                        walls.add(new Wall(walls.size()+1, new Position(x, y)));
+                    }
+                    else if(row % 2 != 0){
+                        if(random.nextBoolean()){
+                            if((x > TILE_SIZE*4 || y > TILE_SIZE*4) ) {
+                                woods.add(new Wood(woods.size()+1, new Position(x + 2, y - 2)));
+                            }
+                        }
+                    }
+                    else {
+                        walls.add(new Wall(walls.size()+1, new Position(x, y)));
+                    }
+                }
+            }
+        }
+//        walls.add(new Wall(0, new Position(TILE_SIZE+800, TILE_SIZE)));
+//        walls.add(new Wall(1, new Position(TILE_SIZE+800, TILE_SIZE*2)));
     }
 
     private void createPawnsAndBombs(){
@@ -249,9 +250,34 @@ public class GameMechanics implements Tickable, Comparable {
     }
 
     private void checkWhetherFireKillsPawn() {
-        //check pawns
-        for(Fire fire: firesLeft){
-            for(Pawn pawn: pawns){
+        Position bombCenterExplosion = firesLeft.get(firesLeft.size()-1).getPosition();
+        Pawn pawnClosestToExplosion = null;
+        ArrayList<Pawn> sortedPawns = new ArrayList<>();
+        double x_difference=1000;
+        double y_difference=1000;
+        //find the pawn which is closest to the bomb, since it will be first to die
+        for(Pawn pawn: pawns) {
+            Position pawnPos = pawn.getPosition();
+            double x_distance_temp = Math.abs(bombCenterExplosion.getX() - pawnPos.getX());
+            double y_distance_temp = Math.abs(bombCenterExplosion.getY() - pawnPos.getY());
+            if(x_distance_temp < x_difference || y_distance_temp < y_difference) {
+                x_difference = x_distance_temp;
+                y_difference = y_distance_temp;
+                pawnClosestToExplosion = pawn;
+            }
+        }
+
+        sortedPawns.add(pawnClosestToExplosion);
+        for(Pawn p: pawns) {
+            if(p != pawnClosestToExplosion){
+                sortedPawns.add(p);
+            }
+        }
+
+
+            //check pawns
+        for(Pawn pawn: sortedPawns) {
+            for(Fire fire: firesLeft) {
                 if(doOverlap(fire.getTopLeftPoint(), fire.getBottomRightPoint(), pawn.getTopLeftPoint(), pawn.getBottomRightPoint())) {
                     pawn.setAlive(false);
                     firstDeadPawn = pawn;
