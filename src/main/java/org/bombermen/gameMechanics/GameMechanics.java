@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_W = 847 - 15;
@@ -135,6 +136,24 @@ public class GameMechanics implements Tickable, Comparable {
         pawnAuto.setPosition(x,y);
     }
 
+    private boolean hasAllPawnHaveDoneAMoveForThisTick() {
+        //check if all the pawns already done their move for this tick; if yes then leave the method since we are done for now
+        for(Pawn pawn: pawns) {
+            if(!(pawn.movedPerTickX || pawn.movedPerTickY)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean hasTickTimeRanOut(long tickStartTime, long elapsed, List<Message> inputQueue, int index) {
+        //check whether tick lasts for too long; then store the rest of messages for the next tick and break out
+        if(System.currentTimeMillis() - tickStartTime >= elapsed) {
+            gameSession.saveMessagesForNextTick(inputQueue.subList(index,inputQueue.size()));
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public void tick(long elapsed) {
@@ -142,9 +161,8 @@ public class GameMechanics implements Tickable, Comparable {
             handleGameOver(elapsed);
             return;
         }
-
-        // Plus 10 extra milliseconds for the method to finish its work before the tick ends
-        long tickStartTime = System.currentTimeMillis()+10;
+        // Plus 15 extra milliseconds for the method to finish its work before the tick ends
+        long tickStartTime = System.currentTimeMillis()+15;
 
         List<Message> inputQueue = gameSession.getInputQueue();
         updatePlantedBombsTimers(elapsed);
@@ -152,9 +170,8 @@ public class GameMechanics implements Tickable, Comparable {
         //System.out.println("Inputqueue size: " + inputQueue.size());
 
         for (Message message : inputQueue) {
-            //check whether tick lasts for too long; then store the rest of messages for the next tick and break out
-            if(System.currentTimeMillis() - tickStartTime >= elapsed) {
-                gameSession.saveMessagesForNextTick(inputQueue.subList(inputQueue.indexOf(message),inputQueue.size()));
+            if(hasAllPawnHaveDoneAMoveForThisTick() || hasTickTimeRanOut(tickStartTime, elapsed, inputQueue, inputQueue.indexOf(message))) {
+                System.out.println("Breaking out from tick()");
                 break;
             }
 
