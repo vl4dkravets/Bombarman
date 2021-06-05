@@ -140,9 +140,7 @@ public class GameMechanics implements Tickable, Comparable {
     public void tick(long elapsed) {
         if (firstDeadPawn != null) {
             handleGameOver(elapsed);
-            if(GAME_END_PAUSE < 0) {
-                return;
-            }
+            return;
         }
 
         List<Message> inputQueue = gameSession.getInputQueue();
