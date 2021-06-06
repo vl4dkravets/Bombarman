@@ -154,37 +154,37 @@ public class GameMechanics implements Tickable, Comparable {
         return false;
     }
 
-//    private void destroy() {
-//        pawns.forEach(item -> item = null);
-//        pawns = null;
-//
-//        walls.forEach(item -> item = null);
-//        walls = null;
-//
-//        woods.forEach(item -> item = null);
-//        woods = null;
-//
-//        bombs.forEach(item -> item = null);
-//        bombs = null;
-//
-//        firesLeft.forEach(item -> item = null);
-//        firesLeft = null;
-//
-//        destroyedWoods.forEach(item -> item = null);
-//        destroyedWoods = null;
-//
-//        firesDefaultPositions.forEach(item -> item = null);
-//        firesDefaultPositions = null;
-//
-//        gameSession = null;
-//        replica = null;
-//        firstDeadPawn = null;
-//    }
+    private void destroy() {
+        pawns.forEach(item -> item = null);
+        pawns = null;
+
+        walls.forEach(item -> item = null);
+        walls = null;
+
+        woods.forEach(item -> item = null);
+        woods = null;
+
+        bombs.forEach(item -> item = null);
+        bombs = null;
+
+        firesLeft.forEach(item -> item = null);
+        firesLeft = null;
+
+        destroyedWoods.forEach(item -> item = null);
+        destroyedWoods = null;
+
+        firesDefaultPositions.forEach(item -> item = null);
+        firesDefaultPositions = null;
+
+        gameSession = null;
+        replica = null;
+        firstDeadPawn = null;
+    }
 
     @Override
     public void tick(long elapsed) {
         if(isGameFinished) {
-            //destroy();
+            destroy();
             return;
         }
         if (firstDeadPawn != null) {

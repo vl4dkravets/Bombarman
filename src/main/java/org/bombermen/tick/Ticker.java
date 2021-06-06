@@ -27,7 +27,7 @@ public class Ticker {
             //log.info("{}: tick ", tickNumber);
             tickNumber++;
         }
-        //destroy();
+        destroy();
     }
 
     public void registerTickable(Tickable tickable) {
@@ -46,8 +46,8 @@ public class Ticker {
         return tickNumber;
     }
 
-//    private void destroy() {
-//        tickables.forEach(item -> item = null);
-//        tickables = null;
-//    }
+    private void destroy() {
+        tickables.forEach(item -> item = null);
+        tickables = null;
+    }
 }

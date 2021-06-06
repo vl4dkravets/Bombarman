@@ -61,7 +61,7 @@ public class GameSession {
 
     public void deleteSession() {
         GameService.getInstance().getGames().remove(gameID);
-        //destroy();
+        destroy();
     }
 
     public void saveMessagesForNextTick(List<Message> messages) {
@@ -84,13 +84,13 @@ public class GameSession {
         this.gameSessionFinished = gameSessionFinished;
     }
 
-//    private void destroy() {
-//        players.forEach(item -> item = null);
-//        players = null;
-//
-//        inputQueue.forEach(item -> item = null);
-//        inputQueue = null;
-//
-//        gameThread = null;
-//    }
+    private void destroy() {
+        players.forEach(item -> item = null);
+        players = null;
+
+        inputQueue.forEach(item -> item = null);
+        inputQueue = null;
+
+        gameThread = null;
+    }
 }
