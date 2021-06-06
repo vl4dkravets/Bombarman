@@ -13,7 +13,7 @@ var InputEngine = function () {
 
     this.possessed = null;
     this.subscribers = [];
-    this.myCounter = 0;
+    //this.myCounter = 0;
     this.fps = 60;
 
 };
@@ -44,15 +44,15 @@ InputEngine.prototype.bind = function(key, action) {
     this.bindings[key] = action;
 };
 
-var pressed = {};
+//var pressed = {};
 
 InputEngine.prototype.onKeyUp = function(event) {
     var action = gInputEngine.bindings[event.keyCode];
 
-    var duration = ( event.timeStamp - pressed[event.which]) / 1000;
+    //var duration = ( event.timeStamp - pressed[event.which]) / 1000;
     // Key "e.which" was pressed for "duration" seconds
-    console.log(duration);
-    pressed[event.which] = 0;
+    //console.log(duration);
+    //pressed[event.which] = 0;
 
 
     if (action) {
@@ -64,9 +64,9 @@ InputEngine.prototype.onKeyUp = function(event) {
 
 InputEngine.prototype.onKeyDown = function(event) {
 
-    if ( !pressed[event.which]) {
-        pressed[event.which] = event.timeStamp;
-    }
+//    if ( !pressed[event.which]) {
+//        pressed[event.which] = event.timeStamp;
+//    }
 
 
     var action = gInputEngine.bindings[event.keyCode];
@@ -76,10 +76,10 @@ InputEngine.prototype.onKeyDown = function(event) {
         if (subscribers) {
             for (var i in subscribers) {
                 subscribers[i]();
-                gInputEngine.myCounter=gInputEngine.myCounter+1;
+                //gInputEngine.myCounter=gInputEngine.myCounter+1;
             }
         }
-        console.log("Message sent " + gInputEngine.myCounter);
+        //console.log("Message sent " + gInputEngine.myCounter);
         event.preventDefault();
     }
 
