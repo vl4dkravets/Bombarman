@@ -3,6 +3,10 @@ package org.bombermen.services;
 import org.bombermen.exceptions.InvalidGameIdException;
 import org.bombermen.game.GameSession;
 import org.bombermen.game.GameThread;
+import org.bombermen.game.Player;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -25,6 +29,7 @@ public class GameService {
 	
 	public void start(GameSession gameSession) {
 		Thread t = new Thread(new GameThread(gameSession), "gameThread-"+gameSessionCounter.get());
+		gameSession.setGameThread(t);
 		t.start();
 	}
 	
@@ -67,5 +72,37 @@ public class GameService {
 	}
 
 	public static GameService getInstance() {return gameService;}
+
+	public boolean haveAllThePlayersDisconnectedFromGame(String playerID) {
+
+		for(GameSession gs: games.values()) {
+			boolean playerDisconnectedFromSession = false;
+			Iterator<Player> players = gs.getPlayersAsIterator();
+			while(players.hasNext()) {
+				Player p = players.next();
+				if(p.getName().equals(playerID) && p.isConnected()) {
+					p.setIsConnected(false);
+					//reset the iterator
+					players = gs.getPlayersAsIterator();
+					playerDisconnectedFromSession = true;
+				}
+				else if(playerDisconnectedFromSession) {
+					if(p.isConnected()) {
+						//meaning, there's still one player live
+						return false;
+					}
+				}
+			}
+			//if got till this point & it's true, then all the players in the session have disconnected
+			if(playerDisconnectedFromSession) {
+				System.out.println("All the players left the session");
+				gs.getGameThread().interrupt();
+				gs.setGameSessionFinished(true);
+				//games.remove(games.entrySet().stream().filter(pair -> pair.getValue().isGameSessionFinished()).findFirst().get());
+				return true;
+			}
+		}
+		return true;
+	}
 
 }

@@ -1,6 +1,7 @@
 package org.bombermen.network;
 
 import org.bombermen.game.Player;
+import org.bombermen.services.GameService;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,8 @@ public class ConnectionPool {
 //                else {
 //                    pressesSent.put(session.getId(), 0);
 //                }
-            } catch (IOException ignored) {
+            } catch (IOException | NullPointerException ignored) {
+                System.out.println("caught " + ignored);
             }
         }
     }
@@ -74,7 +76,9 @@ public class ConnectionPool {
     }
 
     public void remove(WebSocketSession session) {
-        pool.remove(session);
+        if(GameService.getInstance().haveAllThePlayersDisconnectedFromGame(session.getId())) {
+            pool.remove(session);
+        }
     }
 
     public static ConnectionPool getInstance() {

@@ -10,7 +10,7 @@ public class Ticker {
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(Ticker.class);
     private static final int FPS = 60;
     private static final long FRAME_TIME = 1000 / FPS;
-    private final Set<Tickable> tickables = new ConcurrentSkipListSet<>();
+    private Set<Tickable> tickables = new ConcurrentSkipListSet<>();
     private long tickNumber = 0;
 
     public void gameLoop() {
@@ -27,6 +27,7 @@ public class Ticker {
             //log.info("{}: tick ", tickNumber);
             tickNumber++;
         }
+        //destroy();
     }
 
     public void registerTickable(Tickable tickable) {
@@ -44,4 +45,9 @@ public class Ticker {
     public long getTickNumber() {
         return tickNumber;
     }
+
+//    private void destroy() {
+//        tickables.forEach(item -> item = null);
+//        tickables = null;
+//    }
 }

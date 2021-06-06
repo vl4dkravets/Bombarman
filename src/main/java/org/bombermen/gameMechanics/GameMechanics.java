@@ -6,10 +6,8 @@ import org.bombermen.message.Message;
 import org.bombermen.message.Topic;
 import org.bombermen.tick.Tickable;
 import org.jetbrains.annotations.NotNull;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameMechanics implements Tickable, Comparable {
@@ -18,20 +16,20 @@ public class GameMechanics implements Tickable, Comparable {
 
     private final double pawnStepSize = 2.5;
 
-    private final ArrayList<Pawn> pawns;
-    private final ArrayList<Player> players;
-    private final ArrayList<Wall> walls;
-    private final ArrayList<Wood> woods;
-    private final ArrayList<Bomb> bombs;
-    private final ArrayList<Fire> firesLeft;
-    private final ArrayList<Wood> destroyedWoods;
-    private final int nOfPawns;
-    private final GameSession gameSession;
-    private final Replica replica;
-    private final int TILE_SIZE;
+    private ArrayList<Pawn> pawns;
+    private ArrayList<Wall> walls;
+    private ArrayList<Wood> woods;
+    private ArrayList<Bomb> bombs;
+    private ArrayList<Fire> firesLeft;
+    private ArrayList<Wood> destroyedWoods;
+    private int nOfPawns;
+    private GameSession gameSession;
+    private Replica replica;
+    private int TILE_SIZE;
     private Pawn firstDeadPawn;
     private long GAME_END_PAUSE = 3000;
-    private final ArrayList<Position> firesDefaultPositions;
+    private ArrayList<Position> firesDefaultPositions;
+    private boolean isGameFinished;
 
     public GameMechanics(GameSession gameSession) {
         TILE_SIZE = 32;
@@ -45,8 +43,7 @@ public class GameMechanics implements Tickable, Comparable {
         destroyedWoods = new ArrayList<>();
         this.gameSession = gameSession;
         this.nOfPawns = gameSession.getMAX_N_OF_PLAYERS();
-        players = gameSession.getPlayers();
-        replica = new Replica(gameSession.getPlayers());
+        replica = new Replica(gameSession);
 
         createWallsAndWoods();
         createPawnsAndBombs();
@@ -99,8 +96,9 @@ public class GameMechanics implements Tickable, Comparable {
 
     private void createPawnsAndBombs(){
         // create the pawns for each player to control
+        Iterator<Player> players = gameSession.getPlayersAsIterator();
         for(int i = 0; i < nOfPawns; i++){
-            pawns.add(new Pawn(i, players.get(i).getName(),"Pawn_"+i));
+            pawns.add(new Pawn(i, players.next().getName(),"Pawn_"+i));
         }
 
         Pawn pawn1 = pawns.get(0);
@@ -115,9 +113,10 @@ public class GameMechanics implements Tickable, Comparable {
 
     private void handleGameOver(long elapsed) {
         GAME_END_PAUSE -= elapsed;
-        if (GAME_END_PAUSE <= 0) {
+        if (GAME_END_PAUSE <= 0 && !isGameFinished) {
             replica.writeReplicaGameOver(firstDeadPawn);
             Thread.currentThread().interrupt();
+            isGameFinished = true;
         }
     }
 
@@ -155,8 +154,39 @@ public class GameMechanics implements Tickable, Comparable {
         return false;
     }
 
+//    private void destroy() {
+//        pawns.forEach(item -> item = null);
+//        pawns = null;
+//
+//        walls.forEach(item -> item = null);
+//        walls = null;
+//
+//        woods.forEach(item -> item = null);
+//        woods = null;
+//
+//        bombs.forEach(item -> item = null);
+//        bombs = null;
+//
+//        firesLeft.forEach(item -> item = null);
+//        firesLeft = null;
+//
+//        destroyedWoods.forEach(item -> item = null);
+//        destroyedWoods = null;
+//
+//        firesDefaultPositions.forEach(item -> item = null);
+//        firesDefaultPositions = null;
+//
+//        gameSession = null;
+//        replica = null;
+//        firstDeadPawn = null;
+//    }
+
     @Override
     public void tick(long elapsed) {
+        if(isGameFinished) {
+            //destroy();
+            return;
+        }
         if (firstDeadPawn != null) {
             handleGameOver(elapsed);
             return;
