@@ -58,13 +58,11 @@ public class GameMechanics implements Tickable, Comparable {
         Random random = new Random();
         for(int x = 0, column = 0; x <= GAME_FIELD_W; x+=TILE_SIZE, column++) {
             for(int y = 0, row = 0; y <= GAME_FIELD_H; y+=TILE_SIZE, row++) {
-                if(x==0) {
+                //boundaries on left & right
+                if(x==0 || x == GAME_FIELD_W) {
                     walls.add(new Wall(walls.size()+1, new Position(x, y)));
                 }
-                else if(x == GAME_FIELD_W) {
-                    walls.add(new Wall(walls.size()+1, new Position(x, y)));
-                }
-                else if (column % 2 != 0) {
+                else if (column % 3 != 0) {
                     if(y==0 || y==GAME_FIELD_H) {
                         walls.add(new Wall(walls.size()+1, new Position(x, y)));
                     }
@@ -81,7 +79,7 @@ public class GameMechanics implements Tickable, Comparable {
                     if(y==0 || y==GAME_FIELD_H) {
                         walls.add(new Wall(walls.size()+1, new Position(x, y)));
                     }
-                    else if(row % 2 != 0){
+                    else if(row % 3 != 0){
                         if(random.nextBoolean()){
                             if((x > TILE_SIZE*4 || y > TILE_SIZE*4) ) {
                                 woods.add(new Wood(woods.size()+1, new Position(x + 2, y - 2)));
@@ -94,6 +92,9 @@ public class GameMechanics implements Tickable, Comparable {
                 }
             }
         }
+
+        //woods.clear();
+
 //        walls.add(new Wall(0, new Position(TILE_SIZE+800, TILE_SIZE)));
 //        walls.add(new Wall(1, new Position(TILE_SIZE+800, TILE_SIZE*2)));
     }
