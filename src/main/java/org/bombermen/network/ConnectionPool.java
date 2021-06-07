@@ -22,7 +22,7 @@ public class ConnectionPool {
     private final AtomicInteger playerNumber;
     private final ConcurrentHashMap<WebSocketSession, String> pool;
 
-    public HashMap<String, Integer> pressesSent = new HashMap<>();
+    //public HashMap<String, Integer> pressesSent = new HashMap<>();
 
     private ConnectionPool() {
         pool = new ConcurrentHashMap<>();
@@ -34,12 +34,12 @@ public class ConnectionPool {
         if (session.isOpen()) {
             try {
                 session.sendMessage(new TextMessage(msg));
-                if(pressesSent.containsKey(session.getId())) {
-                    pressesSent.compute(session.getId(), (key, value) -> value+1);
-                }
-                else {
-                    pressesSent.put(session.getId(), 0);
-                }
+//                if(pressesSent.containsKey(session.getId())) {
+//                    pressesSent.compute(session.getId(), (key, value) -> value+1);
+//                }
+//                else {
+//                    pressesSent.put(session.getId(), 0);
+//                }
             } catch (IOException | NullPointerException ignored) {
                 System.out.println("caught " + ignored);
             }

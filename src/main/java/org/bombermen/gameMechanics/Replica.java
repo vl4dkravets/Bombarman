@@ -20,16 +20,20 @@ public class Replica {
         if (deadPawns.size() == 1) {
             StreamSupport.stream(gameSession.getPlayersAsSpliterator(), true).
                     forEach(player -> {
-                        if (deadPawns.get(0).getPlayerName().equals(player.getName())) {
+                        if (deadPawns.get(0).getPlayerName().equals(player.getName()) && player.isConnected()) {
                             broker.send(player.getName(), Topic.GAME_OVER, "You lost :(");
-                        } else {
+                        } else if (player.isConnected()){
                             broker.send(player.getName(), Topic.GAME_OVER, "You won!!");
                         }
                     });
         }
         else if(deadPawns.size() == 2) {
             StreamSupport.stream(gameSession.getPlayersAsSpliterator(), true).
-                    forEach(player -> broker.send(player.getName(), Topic.GAME_OVER, "It's a draw!!"));
+                    forEach(player -> {
+                        if(player.isConnected()) {
+                            broker.send(player.getName(), Topic.GAME_OVER, "It's a draw!!");
+                        }
+                    });
         }
     }
 
@@ -44,7 +48,11 @@ public class Replica {
         gameElements.addAll(fires);
         gameElements.addAll(destroyedWoods);
 
-        StreamSupport.stream(gameSession.getPlayersAsSpliterator(), true).forEach(player -> broker.send(player.getName(), topic, gameElements));
+        StreamSupport.stream(gameSession.getPlayersAsSpliterator(), true).forEach(player -> {
+            if(player.isConnected()) {
+                broker.send(player.getName(), topic, gameElements);
+            }
+        });
     }
 
     public void writeReplicaToInitializeGameField(ArrayList<Pawn> pawns, ArrayList<Bomb> bombs, ArrayList<Wood> woods, ArrayList<Wall> walls, Topic topic) {
@@ -59,6 +67,10 @@ public class Replica {
         gameElements.addAll(walls);
 
 
-        StreamSupport.stream(gameSession.getPlayersAsSpliterator(), true).forEach(player -> broker.send(player.getName(), topic, gameElements));
+        StreamSupport.stream(gameSession.getPlayersAsSpliterator(), true).forEach(player -> {
+            if(player.isConnected()) {
+                broker.send(player.getName(), topic, gameElements);
+            }
+        });
     }
 }

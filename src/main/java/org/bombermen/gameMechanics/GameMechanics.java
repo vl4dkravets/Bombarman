@@ -198,7 +198,7 @@ public class GameMechanics implements Tickable, Comparable {
             return;
         }
         // Plus 15 extra milliseconds for the method to finish its work before the tick ends
-        long tickStartTime = System.currentTimeMillis()+15;
+        long tickStartTime = System.currentTimeMillis()+26;
 
         List<Message> inputQueue = gameSession.getInputQueue();
         updatePlantedBombsTimers(elapsed);
@@ -226,6 +226,7 @@ public class GameMechanics implements Tickable, Comparable {
             direction = messageData.substring(messageData.indexOf(":") + 2, messageData.indexOf("}") - 1);
 
             //if a pawn already made a move during this tick - skip the rest of redundant MOVE commands
+            System.out.println("Direction: " + direction);
             System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
             System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
             if ((pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) ||
