@@ -55,47 +55,47 @@ public class GameMechanics implements Tickable, Comparable {
     }
 
     private void createWallsAndWoods() {
-        Random random = new Random();
-        for(int x = 0, column = 0; x <= GAME_FIELD_W; x+=TILE_SIZE, column++) {
-            for(int y = 0, row = 0; y <= GAME_FIELD_H; y+=TILE_SIZE, row++) {
-                if(x==0) {
-                    walls.add(new Wall(walls.size()+1, new Position(x, y)));
-                }
-                else if(x == GAME_FIELD_W) {
-                    walls.add(new Wall(walls.size()+1, new Position(x, y)));
-                }
-                else if (column % 2 != 0) {
-                    if(y==0 || y==GAME_FIELD_H) {
-                        walls.add(new Wall(walls.size()+1, new Position(x, y)));
-                    }
-                    else {
-                        if(random.nextBoolean()){
-                            if((x > TILE_SIZE*4 || y > TILE_SIZE*3) && (x < (GAME_FIELD_W - TILE_SIZE*3) || y < (GAME_FIELD_H - TILE_SIZE*4))) {
-                                woods.add(new Wood(woods.size()+1, new Position(x + 2, y - 2)));
-                            }
-                        }
-                    }
-
-                }
-                else {
-                    if(y==0 || y==GAME_FIELD_H) {
-                        walls.add(new Wall(walls.size()+1, new Position(x, y)));
-                    }
-                    else if(row % 2 != 0){
-                        if(random.nextBoolean()){
-                            if((x > TILE_SIZE*4 || y > TILE_SIZE*4) ) {
-                                woods.add(new Wood(woods.size()+1, new Position(x + 2, y - 2)));
-                            }
-                        }
-                    }
-                    else {
-                        walls.add(new Wall(walls.size()+1, new Position(x, y)));
-                    }
-                }
-            }
-        }
-//        walls.add(new Wall(0, new Position(TILE_SIZE+800, TILE_SIZE)));
-//        walls.add(new Wall(1, new Position(TILE_SIZE+800, TILE_SIZE*2)));
+//        Random random = new Random();
+//        for(int x = 0, column = 0; x <= GAME_FIELD_W; x+=TILE_SIZE, column++) {
+//            for(int y = 0, row = 0; y <= GAME_FIELD_H; y+=TILE_SIZE, row++) {
+//                if(x==0) {
+//                    walls.add(new Wall(walls.size()+1, new Position(x, y)));
+//                }
+//                else if(x == GAME_FIELD_W) {
+//                    walls.add(new Wall(walls.size()+1, new Position(x, y)));
+//                }
+//                else if (column % 2 != 0) {
+//                    if(y==0 || y==GAME_FIELD_H) {
+//                        walls.add(new Wall(walls.size()+1, new Position(x, y)));
+//                    }
+//                    else {
+//                        if(random.nextBoolean()){
+//                            if((x > TILE_SIZE*4 || y > TILE_SIZE*3) && (x < (GAME_FIELD_W - TILE_SIZE*3) || y < (GAME_FIELD_H - TILE_SIZE*4))) {
+//                                woods.add(new Wood(woods.size()+1, new Position(x + 2, y - 2)));
+//                            }
+//                        }
+//                    }
+//
+//                }
+//                else {
+//                    if(y==0 || y==GAME_FIELD_H) {
+//                        walls.add(new Wall(walls.size()+1, new Position(x, y)));
+//                    }
+//                    else if(row % 2 != 0){
+//                        if(random.nextBoolean()){
+//                            if((x > TILE_SIZE*4 || y > TILE_SIZE*4) ) {
+//                                woods.add(new Wood(woods.size()+1, new Position(x + 2, y - 2)));
+//                            }
+//                        }
+//                    }
+//                    else {
+//                        walls.add(new Wall(walls.size()+1, new Position(x, y)));
+//                    }
+//                }
+//            }
+//        }
+        walls.add(new Wall(0, new Position(TILE_SIZE+800, TILE_SIZE)));
+        walls.add(new Wall(1, new Position(TILE_SIZE+800, TILE_SIZE*2)));
     }
 
     private void createPawnsAndBombs(){
@@ -108,8 +108,8 @@ public class GameMechanics implements Tickable, Comparable {
         Pawn pawn1 = pawns.get(0);
         Pawn pawn2 = pawns.get(1);
         pawn1.setPosition(TILE_SIZE, TILE_SIZE);
-        //pawn2.setPosition(TILE_SIZE, TILE_SIZE*2);
-        pawn2.setPosition(GAME_FIELD_W - TILE_SIZE, GAME_FIELD_H - TILE_SIZE);
+        pawn2.setPosition(TILE_SIZE, TILE_SIZE*2);
+        //pawn2.setPosition(GAME_FIELD_W - TILE_SIZE, GAME_FIELD_H - TILE_SIZE);
         pawn1.setBomb(new Bomb(pawn1.getPosition()));
         pawn2.setBomb(new Bomb(pawn2.getPosition()));
         bombs.add(pawn1.getBomb());
@@ -212,7 +212,8 @@ public class GameMechanics implements Tickable, Comparable {
             }
 
             Pawn pawn = pawns.stream().filter(pawn1 -> pawn1.getPlayerName().equals(message.getPlayerName())).findFirst().get();
-            //if(pawn == pawns.get(0)) {continue;}
+
+            if(pawn == pawns.get(0)) {continue;}
 
             if (message.getTopic() == Topic.PLANT_BOMB) {
                 setUpBomb(pawn.getBomb(), pawn, elapsed);
@@ -279,7 +280,7 @@ public class GameMechanics implements Tickable, Comparable {
             pawn.setDirection(direction);
         }
 
-        //pawnRobot();
+        pawnRobot();
 
         replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
         cleanAndPrepareForTheNextTick();
