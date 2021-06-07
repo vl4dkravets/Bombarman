@@ -213,7 +213,7 @@ public class GameMechanics implements Tickable, Comparable {
 
             Pawn pawn = pawns.stream().filter(pawn1 -> pawn1.getPlayerName().equals(message.getPlayerName())).findFirst().get();
 
-            if(pawn == pawns.get(0)) {continue;}
+            //if(pawn == pawns.get(0)) {continue;}
 
             if (message.getTopic() == Topic.PLANT_BOMB) {
                 setUpBomb(pawn.getBomb(), pawn, elapsed);
@@ -280,7 +280,7 @@ public class GameMechanics implements Tickable, Comparable {
             pawn.setDirection(direction);
         }
 
-        pawnRobot();
+        //pawnRobot();
 
         replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
         cleanAndPrepareForTheNextTick();
