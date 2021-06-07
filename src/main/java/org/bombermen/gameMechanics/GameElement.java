@@ -3,7 +3,7 @@ package org.bombermen.gameMechanics;
 public abstract class GameElement {
     private int id;
     private Position position;
-    private final double tileSize = 28;
+    private final double tileSize = 32;
 
     public GameElement(Position position) {
         this.position = position;
