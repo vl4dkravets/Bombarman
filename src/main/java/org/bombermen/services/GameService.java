@@ -7,6 +7,7 @@ import org.bombermen.game.Player;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,6 +21,7 @@ public class GameService {
 	private final AtomicInteger playersConnectedToLastCreatedSession;
 	private final AtomicInteger gameSessionCounter;
 	private String lastCreateGameID;
+	private ArrayList<GameThread> gameThreads = new ArrayList<>();
 	
 	private GameService() {
 		games = new ConcurrentHashMap<>();
