@@ -199,7 +199,7 @@ public class GameMechanics implements Tickable, Comparable {
             return;
         }
         // Plus 15 extra milliseconds for the method to finish its work before the tick ends
-        long tickStartTime = System.currentTimeMillis()+26;
+        long tickStartTime = System.currentTimeMillis()+30;
 
         List<Message> inputQueue = gameSession.getInputQueue();
         updatePlantedBombsTimers(elapsed);
@@ -423,8 +423,8 @@ public class GameMechanics implements Tickable, Comparable {
     }
 
     private boolean checkIfPawnDidntStuck(double currentX, double currentY, Pawn currentPawn) {
-        Position currPos_TopLeft = new Position(currentX,currentY+ 32);
-        Position currPos_BottomRight = new Position(currentX+32,currentY);
+        Position currPos_TopLeft = new Position(currentX,currentY+ 29);
+        Position currPos_BottomRight = new Position(currentX+29,currentY);
 
         // second, make sure pawn pawns don't step on each other
         for(Pawn pawn: pawns) {
