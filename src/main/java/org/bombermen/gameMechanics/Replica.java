@@ -5,6 +5,7 @@ import org.bombermen.game.Player;
 import org.bombermen.message.Topic;
 import org.bombermen.network.Broker;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.stream.StreamSupport;
 
 public class Replica {
@@ -15,6 +16,15 @@ public class Replica {
         this.gameSession = gameSession;
         broker = Broker.getInstance();
     }
+
+    public void writeReplicaPossessed(ArrayList<Pawn> pawns) {
+        Iterator<Player> iterator = gameSession.getPlayersAsIterator();
+        int index = 0;
+        while(iterator.hasNext()) {
+            broker.send(iterator.next().getName(), Topic.POSSESS, new Integer(index++));
+        }
+    }
+
 
     public void writeReplicaGameOver(ArrayList<Pawn> deadPawns) {
         if (deadPawns.size() == 1) {

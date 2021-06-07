@@ -52,6 +52,7 @@ public class GameMechanics implements Tickable, Comparable {
         createPawnsAndBombs();
 
         replica.writeReplicaToInitializeGameField(pawns, bombs, woods, walls, Topic.START);
+        replica.writeReplicaPossessed(pawns);
     }
 
     private void createWallsAndWoods() {

@@ -6,12 +6,16 @@ var GameEngine = function () {
         tile: {},
         bonus: {}
     };
+    this.w = 0;
+    this.h = 0;
 };
 
 GameEngine.prototype.load = function () {
     this.stage = new createjs.Stage("canvas");
-    this.stage.canvas.width = gCanvas.getWidthInPixel();
-    this.stage.canvas.height = gCanvas.getHeightInPixel();
+    GameEngine.w = gCanvas.getWidthInPixel();
+    GameEngine.h = gCanvas.getHeightInPixel();
+    this.stage.canvas.width = GameEngine.w;
+    this.stage.canvas.height = GameEngine.h;
     this.stage.enableMouseOver();
 
     var queue = new createjs.LoadQueue();

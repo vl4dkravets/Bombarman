@@ -23,6 +23,24 @@ Game.prototype.start = function () {
     });
 };
 
+Game.prototype.drawStartIndicatorOnHtml = function() {
+    var myStart = document.getElementById('Start');
+    myStart.style.display = "";
+    myStart.style.position = 'fixed';
+    myStart.innerHTML = "Start";
+    myStart.style.backgroundColor = 'coral';
+
+    if(gInputEngine.possessed===0) {
+        myStart.style.left = (window.outerWidth / 2) - (GameEngine.w / 2) - 70 + 'px';
+        myStart.style.top = GameEngine.h  - 70 + 'px';
+    }
+    else if(gInputEngine.possessed===1) {
+        myStart.style.right = (window.outerWidth / 2) - (GameEngine.w / 2) - 90 + 'px';
+        myStart.style.top =  30 + 'px';
+    }
+}
+
+
 Game.prototype.update = function () {
     for (var i = 0; i < this.players.length; i++) {
         this.players[i].update();
