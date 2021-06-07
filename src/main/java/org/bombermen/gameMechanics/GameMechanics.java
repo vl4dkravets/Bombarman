@@ -203,7 +203,7 @@ public class GameMechanics implements Tickable, Comparable {
         List<Message> inputQueue = gameSession.getInputQueue();
         updatePlantedBombsTimers(elapsed);
 
-        //System.out.println("Inputqueue size: " + inputQueue.size());
+        System.out.println("Inputqueue size: " + inputQueue.size());
 
         for (Message message : inputQueue) {
             if(hasAllPawnHaveDoneAMoveForThisTick() || hasTickTimeRanOut(tickStartTime, elapsed, inputQueue, inputQueue.indexOf(message))) {
@@ -226,15 +226,15 @@ public class GameMechanics implements Tickable, Comparable {
             direction = messageData.substring(messageData.indexOf(":") + 2, messageData.indexOf("}") - 1);
 
             //if a pawn already made a move during this tick - skip the rest of redundant MOVE commands
-//            System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
-//            System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
+            System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
+            System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
             if ((pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) ||
                     (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT")))) {
-                //System.out.println("skip");
+                System.out.println("skip");
                 continue;
             }
 
-            //System.out.println("\t" + pawn);
+            System.out.println("\t" + pawn);
 
             double newX = pawnPosition.getX();
             double newY = pawnPosition.getY();
