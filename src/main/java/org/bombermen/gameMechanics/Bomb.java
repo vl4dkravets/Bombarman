@@ -12,7 +12,7 @@ public class Bomb extends GameElement{
     }
 
     public boolean updateBombTimerAndCheck(long elapsed) {
-        //startTime+=elapsed;
+        startTime+=elapsed;
         return startTime >= 10_000;
     }
 }
