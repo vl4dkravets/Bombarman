@@ -16,16 +16,21 @@ public class Replica {
         broker = Broker.getInstance();
     }
 
-    public void writeReplicaGameOver(Pawn deadPawn){
-        StreamSupport.stream(gameSession.getPlayersAsSpliterator(), true).
-                forEach(player -> {
-                            if(deadPawn.getPlayerName().equals(player.getName())) {
-                                broker.send(player.getName(), Topic.GAME_OVER, "You lost :(");
-                            }
-                            else{
-                                broker.send(player.getName(), Topic.GAME_OVER, "You won!!");
-                            }
-        });
+    public void writeReplicaGameOver(ArrayList<Pawn> deadPawns) {
+        if (deadPawns.size() == 1) {
+            StreamSupport.stream(gameSession.getPlayersAsSpliterator(), true).
+                    forEach(player -> {
+                        if (deadPawns.get(0).getPlayerName().equals(player.getName())) {
+                            broker.send(player.getName(), Topic.GAME_OVER, "You lost :(");
+                        } else {
+                            broker.send(player.getName(), Topic.GAME_OVER, "You won!!");
+                        }
+                    });
+        }
+        else if(deadPawns.size() == 2) {
+            StreamSupport.stream(gameSession.getPlayersAsSpliterator(), true).
+                    forEach(player -> broker.send(player.getName(), Topic.GAME_OVER, "It's a draw!!"));
+        }
     }
 
     public void writeReplica(ArrayList<Pawn> pawns, ArrayList<Bomb> bombs, ArrayList<Fire> fires, ArrayList<Wood> destroyedWoods,  Topic topic) {

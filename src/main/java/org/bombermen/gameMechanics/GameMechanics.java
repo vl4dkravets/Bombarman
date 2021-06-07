@@ -21,12 +21,14 @@ public class GameMechanics implements Tickable, Comparable {
     private ArrayList<Wood> woods;
     private ArrayList<Bomb> bombs;
     private ArrayList<Fire> firesLeft;
+    private ArrayList<Fire> fires;
     private ArrayList<Wood> destroyedWoods;
     private int nOfPawns;
     private GameSession gameSession;
     private Replica replica;
     private int TILE_SIZE;
-    private Pawn firstDeadPawn;
+    //private Pawn firstDeadPawn;
+    private ArrayList<Pawn> deadPawns;
     private long GAME_END_PAUSE = 3000;
     private ArrayList<Position> firesDefaultPositions;
     private boolean isGameFinished;
@@ -39,10 +41,12 @@ public class GameMechanics implements Tickable, Comparable {
         bombs = new ArrayList<>();
         firesDefaultPositions = new ArrayList<>();
         firesLeft = new ArrayList<>();
+        fires = new ArrayList<>();
         destroyedWoods = new ArrayList<>();
         this.gameSession = gameSession;
         this.nOfPawns = gameSession.getMAX_N_OF_PLAYERS();
         replica = new Replica(gameSession);
+        deadPawns = new ArrayList<>();
 
         createWallsAndWoods();
         createPawnsAndBombs();
@@ -115,7 +119,7 @@ public class GameMechanics implements Tickable, Comparable {
     private void handleGameOver(long elapsed) {
         GAME_END_PAUSE -= elapsed;
         if (GAME_END_PAUSE <= 0 && !isGameFinished) {
-            replica.writeReplicaGameOver(firstDeadPawn);
+            replica.writeReplicaGameOver(deadPawns);
             Thread.currentThread().interrupt();
             isGameFinished = true;
         }
@@ -179,16 +183,17 @@ public class GameMechanics implements Tickable, Comparable {
 
         gameSession = null;
         replica = null;
-        firstDeadPawn = null;
+        deadPawns = null;
     }
 
     @Override
     public void tick(long elapsed) {
         if(isGameFinished) {
             destroy();
+            deadPawns.clear();
             return;
         }
-        if (firstDeadPawn != null) {
+        if (deadPawns.size() > 0) {
             handleGameOver(elapsed);
             return;
         }
@@ -207,6 +212,7 @@ public class GameMechanics implements Tickable, Comparable {
             }
 
             Pawn pawn = pawns.stream().filter(pawn1 -> pawn1.getPlayerName().equals(message.getPlayerName())).findFirst().get();
+            //if(pawn == pawns.get(0)) {continue;}
 
             if (message.getTopic() == Topic.PLANT_BOMB) {
                 setUpBomb(pawn.getBomb(), pawn, elapsed);
@@ -275,14 +281,13 @@ public class GameMechanics implements Tickable, Comparable {
 
         //pawnRobot();
 
-        replica.writeReplica(pawns, bombs, firesLeft, destroyedWoods, Topic.REPLICA);
+        replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
         cleanAndPrepareForTheNextTick();
     }
 
     private void cleanAndPrepareForTheNextTick() {
-        firesLeft.clear();
-        firesDefaultPositions.clear();
         destroyedWoods.clear();
+        fires.clear();
 
         //reinitialize variables for the next tick
         for (Pawn p : pawns) {
@@ -336,11 +341,11 @@ public class GameMechanics implements Tickable, Comparable {
             for(Fire fire: firesLeft) {
                 if(doOverlap(fire.getTopLeftPoint(), fire.getBottomRightPoint(), pawn.getTopLeftPoint(), pawn.getBottomRightPoint())) {
                     pawn.setAlive(false);
-                    firstDeadPawn = pawn;
+                    deadPawns.add(pawn);
                     break;
                 }
             }
-            if(firstDeadPawn != null) {break;}
+            //if(firstDeadPawn != null) {break;}
         }
     }
 
@@ -408,6 +413,10 @@ public class GameMechanics implements Tickable, Comparable {
         leaveFireWhichDontStuckWithWalls(explosionPosition);
         leaveFireWhichDontStuckWithWoods();
         checkWhetherFireKillsPawn();
+
+        fires.addAll(firesLeft);
+        firesLeft.clear();
+        firesDefaultPositions.clear();
     }
 
     private boolean checkIfPawnDidntStuck(double currentX, double currentY, Pawn currentPawn) {
