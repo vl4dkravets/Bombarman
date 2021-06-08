@@ -1,6 +1,5 @@
 package org.bombermen.game;
 
-import org.bombermen.gameMechanics.GameMechanics;
 import org.bombermen.tick.Ticker;
 
 public class GameThread implements Runnable {

@@ -1,4 +1,4 @@
-package org.bombermen.gameMechanics;
+package org.bombermen.gameElements;
 
 public abstract class GameElement {
     private int id;

@@ -1,4 +1,4 @@
-package org.bombermen.gameMechanics;
+package org.bombermen.gameElements;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

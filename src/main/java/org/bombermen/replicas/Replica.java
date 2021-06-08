@@ -1,7 +1,8 @@
-package org.bombermen.gameMechanics;
+package org.bombermen.replicas;
 
 import org.bombermen.game.GameSession;
 import org.bombermen.game.Player;
+import org.bombermen.gameElements.*;
 import org.bombermen.message.Topic;
 import org.bombermen.network.Broker;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class Replica {
         }
     }
 
-    public void writeReplica(ArrayList<Pawn> pawns, ArrayList<Bomb> bombs, ArrayList<Fire> fires, ArrayList<Wood> destroyedWoods,  Topic topic) {
+    public void writeReplica(ArrayList<Pawn> pawns, ArrayList<Bomb> bombs, ArrayList<Fire> fires, ArrayList<Wood> destroyedWoods, Topic topic) {
         ArrayList<GameElement> gameElements = new ArrayList<>();
 
         gameElements.addAll(pawns);

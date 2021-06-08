@@ -1,5 +1,7 @@
-package org.bombermen.gameMechanics;
+package org.bombermen.game;
 
+import org.bombermen.gameElements.*;
+import org.bombermen.replicas.Replica;
 import org.bombermen.game.GameSession;
 import org.bombermen.game.Player;
 import org.bombermen.message.Message;
@@ -8,7 +10,6 @@ import org.bombermen.tick.Tickable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameMechanics implements Tickable, Comparable {
     private final int GAME_FIELD_W = 847 - 15;
