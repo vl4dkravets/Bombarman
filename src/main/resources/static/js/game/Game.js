@@ -23,6 +23,12 @@ Game.prototype.start = function () {
     });
 };
 
+Game.prototype.removeStartIndicatorOnHtml = function() {
+    var myStart = document.getElementById('Start');
+    myStart.style.display = "none";
+    gInputEngine.possessed = null;
+}
+
 Game.prototype.drawStartIndicatorOnHtml = function() {
     var myStart = document.getElementById('Start');
     myStart.style.display = "";
@@ -31,12 +37,26 @@ Game.prototype.drawStartIndicatorOnHtml = function() {
     myStart.style.backgroundColor = 'coral';
 
     if(gInputEngine.possessed===0) {
-        myStart.style.left = (window.outerWidth / 2) - (GameEngine.w / 2) - 70 + 'px';
-        myStart.style.top = GameEngine.h  - 70 + 'px';
+        var left = (window.outerWidth / 2) - (GameEngine.w / 2);
+        var top = GameEngine.h;
+
+        left -= left * 0.11;
+        left += 'px';
+
+        top -= top * 0.15;
+        top += 'px';
+        myStart.style.left = left;
+        myStart.style.top = top;
     }
     else if(gInputEngine.possessed===1) {
-        myStart.style.right = (window.outerWidth / 2) - (GameEngine.w / 2) - 90 + 'px';
-        myStart.style.top =  30 + 'px';
+        var right = (window.outerWidth / 2) - (GameEngine.w / 2);
+        var bottom = GameEngine.h * 0.08;
+        right -= right * 0.16;
+        right += 'px';
+        bottom += 'px';
+
+        myStart.style.right = right;
+        myStart.style.top =  bottom;
     }
 }
 

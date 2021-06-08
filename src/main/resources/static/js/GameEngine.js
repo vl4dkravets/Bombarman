@@ -58,6 +58,7 @@ GameEngine.prototype.startGame = function () {
 };
 
 GameEngine.prototype.finishGame = function (gameOverText) {
+    gGameEngine.game.removeStartIndicatorOnHtml();
     if (this.game !== null) {
         this.game.finish();
         this.game = null;
