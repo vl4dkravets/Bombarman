@@ -44,6 +44,7 @@ MessageBroker.prototype.handleGameOver = function (msg) {
 MessageBroker.prototype.handlePossess = function (msg) {
     gInputEngine.possessed = parseInt(msg.data);
     gGameEngine.game.drawStartIndicatorOnHtml();
+    Game.prototype.removeWaitIndicatorOnHtml();
 };
 
 // Далее происходит обработка присланных объектов (эти функции вызываются из функции gc)

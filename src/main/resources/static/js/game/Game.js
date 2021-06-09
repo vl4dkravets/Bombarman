@@ -26,6 +26,10 @@ Game.prototype.start = function () {
 Game.prototype.removeStartIndicatorOnHtml = function() {
     var myStart = document.getElementById('Start');
     myStart.style.display = "none";
+    myStart.style.top = '';
+    myStart.style.right = '';
+    myStart.style.bottom = '';
+    myStart.style.left = '';
     gInputEngine.possessed = null;
 }
 
@@ -59,6 +63,26 @@ Game.prototype.drawStartIndicatorOnHtml = function() {
         myStart.style.top =  bottom;
     }
 
+}
+
+Game.prototype.drawWaitIndicatorOnHtml = function() {
+    var myWait = document.getElementById('Wait');
+    myWait.style.display = "";
+    myWait.style.position = 'fixed';
+    myWait.innerHTML = "Waiting for 2nd player";
+    myWait.style.backgroundColor = '#00ff00';
+
+    var left = 42 + "%";
+    var top = 20 + "%";
+    myWait.style.left = left;
+    myWait.style.top = top;
+}
+
+Game.prototype.removeWaitIndicatorOnHtml = function() {
+    var myWait = document.getElementById('Wait');
+    myWait.style.display = "none";
+    myWait.style.left = '';
+    myWait.style.top = '';
 }
 
 

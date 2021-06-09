@@ -55,6 +55,7 @@ GameEngine.prototype.startGame = function () {
     this.menu.hide();
     this.game = new Game(this.stage);
     this.game.start();
+    gGameEngine.game.drawWaitIndicatorOnHtml();
 };
 
 GameEngine.prototype.finishGame = function (gameOverText) {
