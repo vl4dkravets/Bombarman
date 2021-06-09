@@ -36,37 +36,29 @@ Game.prototype.drawStartIndicatorOnHtml = function() {
     myStart.innerHTML = "Start";
     myStart.style.backgroundColor = 'coral';
 
-//    if(gInputEngine.possessed===0) {
-//        var left = (window.outerWidth / 2) - (GameEngine.w / 2);
-//        var top = GameEngine.h;
-//
-//        left -= left * 0.11;
-//        left += 'px';
-//
-//        top -= top * 0.15;
-//        top += 'px';
-//        myStart.style.left = left;
-//        myStart.style.top = top;
-//    }
-//    else if(gInputEngine.possessed===1) {
-//        var right = (window.outerWidth / 2) - (GameEngine.w / 2);
-//        var bottom = GameEngine.h * 0.08;
-//        right -= right * 0.16;
-//        right += 'px';
-//        bottom += 'px';
-//
-//        myStart.style.right = right;
-//        myStart.style.top =  bottom;
-//    }
-
     if(gInputEngine.possessed===0) {
-        myStart.style.left = 25 + '%';
-        myStart.style.top = 48 + '%';
+        var left = (window.outerWidth / 2) - (GameEngine.w / 2);
+        var top = GameEngine.h;
+
+        left -= left * 0.15;
+        left += 'px';
+
+        top -= top * 0.15;
+        top += 'px';
+        myStart.style.left = left;
+        myStart.style.top = top;
     }
     else if(gInputEngine.possessed===1) {
-        myStart.style.right = 23.5 + '%';
-        myStart.style.top =  4 + '%';
+        var right = (window.outerWidth / 2) - (GameEngine.w / 2);
+        var bottom = GameEngine.h * 0.08;
+        right -= right * 0.2;
+        right += 'px';
+        bottom += 'px';
+
+        myStart.style.right = right;
+        myStart.style.top =  bottom;
     }
+
 }
 
 
