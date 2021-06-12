@@ -24,17 +24,17 @@ public class GameMechanics implements Tickable, Comparable {
     private ArrayList<Fire> firesLeft;
     private ArrayList<Fire> fires;
     private ArrayList<Wood> destroyedWoods;
+    private ArrayList<Pawn> deadPawns;
     private int nOfPawns;
     private GameSession gameSession;
     private Replica replica;
     private int TILE_SIZE;
     //private Pawn firstDeadPawn;
-    private ArrayList<Pawn> deadPawns;
     private long GAME_END_PAUSE = 3000;
     private ArrayList<Position> firesDefaultPositions;
     private boolean isGameFinished;
 
-    public GameMechanics(GameSession gameSession) {
+    public GameMechanics(GameSession gameSession, Replica replica) {
         TILE_SIZE = 32;
         pawns = new ArrayList<>();
         walls = new ArrayList<>();
@@ -46,7 +46,7 @@ public class GameMechanics implements Tickable, Comparable {
         destroyedWoods = new ArrayList<>();
         this.gameSession = gameSession;
         this.nOfPawns = gameSession.getMAX_N_OF_PLAYERS();
-        replica = new Replica(gameSession);
+        this.replica = replica;
         deadPawns = new ArrayList<>();
 
         createWallsAndWoods();
@@ -54,7 +54,6 @@ public class GameMechanics implements Tickable, Comparable {
 
         replica.writeReplicaPossessed(pawns);
         replica.writeReplicaToInitializeGameField(pawns, bombs, woods, walls, Topic.START);
-
     }
 
     private void createWallsAndWoods() {
@@ -95,9 +94,6 @@ public class GameMechanics implements Tickable, Comparable {
                 }
             }
         }
-
-        //woods.clear();
-
 //        walls.add(new Wall(0, new Position(TILE_SIZE+800, TILE_SIZE)));
 //        walls.add(new Wall(1, new Position(TILE_SIZE+800, TILE_SIZE*2)));
     }
@@ -207,7 +203,7 @@ public class GameMechanics implements Tickable, Comparable {
         List<Message> inputQueue = gameSession.getInputQueue();
         updatePlantedBombsTimers(elapsed);
 
-        System.out.println("Inputqueue size: " + inputQueue.size());
+        //System.out.println("Inputqueue size: " + inputQueue.size());
 
         for (Message message : inputQueue) {
             if(hasAllPawnHaveDoneAMoveForThisTick() || hasTickTimeRanOut(tickStartTime, elapsed, inputQueue, inputQueue.indexOf(message))) {
@@ -230,16 +226,16 @@ public class GameMechanics implements Tickable, Comparable {
             direction = messageData.substring(messageData.indexOf(":") + 2, messageData.indexOf("}") - 1);
 
             //if a pawn already made a move during this tick - skip the rest of redundant MOVE commands
-            System.out.println("Direction: " + direction);
-            System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
-            System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
+//            System.out.println("Direction: " + direction);
+//            System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
+//            System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
             if ((pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) ||
                     (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT")))) {
-                System.out.println("skip");
+                //System.out.println("skip");
                 continue;
             }
 
-            System.out.println("\t" + pawn);
+            //System.out.println("\t" + pawn);
 
             double newX = pawnPosition.getX();
             double newY = pawnPosition.getY();
@@ -472,6 +468,74 @@ public class GameMechanics implements Tickable, Comparable {
 
         // If one rectangle is above other
         return !(l1.getY() <= r2.getY()) && !(l2.getY() <= r1.getY());
+    }
+
+    public void setReplica(Replica replica) {
+        this.replica = replica;
+    }
+
+    public int getGAME_FIELD_W() {
+        return GAME_FIELD_W;
+    }
+
+    public int getGAME_FIELD_H() {
+        return GAME_FIELD_H;
+    }
+
+    public ArrayList<Pawn> getPawns() {
+        return pawns;
+    }
+
+    public ArrayList<Wall> getWalls() {
+        return walls;
+    }
+
+    public ArrayList<Wood> getWoods() {
+        return woods;
+    }
+
+    public ArrayList<Bomb> getBombs() {
+        return bombs;
+    }
+
+    public ArrayList<Fire> getFiresLeft() {
+        return firesLeft;
+    }
+
+    public ArrayList<Fire> getFires() {
+        return fires;
+    }
+
+    public ArrayList<Wood> getDestroyedWoods() {
+        return destroyedWoods;
+    }
+
+    public ArrayList<Pawn> getDeadPawns() {
+        return deadPawns;
+    }
+
+    public int getnOfPawns() {
+        return nOfPawns;
+    }
+
+    public int getTILE_SIZE() {
+        return TILE_SIZE;
+    }
+
+    public long getGAME_END_PAUSE() {
+        return GAME_END_PAUSE;
+    }
+
+    public boolean isGameFinished() {
+        return isGameFinished;
+    }
+
+    public ArrayList<Position> getFiresDefaultPositions() {
+         return firesDefaultPositions;
+    }
+
+    public double getPawnStepSize() {
+        return pawnStepSize;
     }
 }
 

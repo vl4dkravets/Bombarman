@@ -51,4 +51,8 @@ public class Position {
     public Position getBottomRightPoint() {
         return new Position(getX()+tileSize, getY());
     }
+
+    public int getTileSize() {
+        return tileSize;
+    }
 }

@@ -1,5 +1,6 @@
 package org.bombermen.game;
 
+import org.bombermen.replicas.Replica;
 import org.bombermen.tick.Ticker;
 
 public class GameThread implements Runnable {
@@ -13,7 +14,7 @@ public class GameThread implements Runnable {
 
     @Override
     public void run() {
-        GameMechanics gameMechanics = new GameMechanics(gameSession);
+        GameMechanics gameMechanics = new GameMechanics(gameSession, new Replica(gameSession));
         ticker.registerTickable(gameMechanics);
         ticker.gameLoop();
         finishGameSession();

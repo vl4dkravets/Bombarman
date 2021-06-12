@@ -45,4 +45,11 @@ public abstract class GameElement {
     public double getTileSize() {
         return tileSize;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        GameElement gameElement = (GameElement)obj;
+        return gameElement.getPosition().equals(getPosition());
+
+    }
 }

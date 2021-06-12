@@ -47,8 +47,17 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'junit', module: 'junit'
+    }
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.mockito:mockito-core:3.11.1'
+    implementation 'org.mockito:mockito-junit-jupiter:3.10.0'
+
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
 }
 
 test {
