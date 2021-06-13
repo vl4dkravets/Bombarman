@@ -129,7 +129,7 @@ public class GameMechanics implements Tickable, Comparable {
         bomb.setPosition(new Position(bomb.getPosition().getX(), bomb.getPosition().getY()));
         pawn.setBomb(new Bomb(pawn.getPosition()));
         bombs.add(pawn.getBomb());
-        updatePlantedBombsTimers(elapsed);
+        //updatePlantedBombsTimers(elapsed);
     }
 
     //updates coordinates automatically, so first pawn walks by itself
@@ -143,7 +143,7 @@ public class GameMechanics implements Tickable, Comparable {
     private boolean hasAllPawnHaveDoneAMoveForThisTick() {
         //check if all the pawns already done their move for this tick; if yes then leave the method since we are done for now
         for(Pawn pawn: pawns) {
-            if(!(pawn.movedPerTickX || pawn.movedPerTickY)) {
+            if(!(pawn.isMovedPerTickX() || pawn.isMovedPerTickY())) {
                 return false;
             }
         }
@@ -201,7 +201,7 @@ public class GameMechanics implements Tickable, Comparable {
         long tickStartTime = System.currentTimeMillis()+30;
 
         List<Message> inputQueue = gameSession.getInputQueue();
-        updatePlantedBombsTimers(elapsed);
+
 
         //System.out.println("Inputqueue size: " + inputQueue.size());
 
@@ -229,8 +229,8 @@ public class GameMechanics implements Tickable, Comparable {
 //            System.out.println("Direction: " + direction);
 //            System.out.println(pawn.movedPerTickX + " " + direction.equals("LEFT") + " " + direction.equals("RIGHT"));
 //            System.out.println(pawn.movedPerTickY + " " + direction.equals("UP") + " " + direction.equals("DOWN"));
-            if ((pawn.movedPerTickY && (direction.equals("UP") || direction.equals("DOWN"))) ||
-                    (pawn.movedPerTickX && (direction.equals("LEFT") || direction.equals("RIGHT")))) {
+            if ((pawn.isMovedPerTickY() && (direction.equals("UP") || direction.equals("DOWN"))) ||
+                    (pawn.isMovedPerTickX() && (direction.equals("LEFT") || direction.equals("RIGHT")))) {
                 //System.out.println("skip");
                 continue;
             }
@@ -246,7 +246,7 @@ public class GameMechanics implements Tickable, Comparable {
                     if (checkIfPawnDidntStuck(newX, newY, pawn)) {
                         pawnPosition.setY(newY);
 
-                        pawn.movedPerTickY = true;
+                        pawn.setMovedPerTickY(true);
                         //System.out.println("\t" + pawn + ": " + direction);
                     }
                     break;
@@ -255,7 +255,7 @@ public class GameMechanics implements Tickable, Comparable {
                     if (checkIfPawnDidntStuck(newX, newY, pawn)) {
                         pawnPosition.setY(newY);
 
-                        pawn.movedPerTickY = true;
+                        pawn.setMovedPerTickY(true);
                         //System.out.println("\t" + pawn + ": " + direction);
                     }
                     break;
@@ -264,7 +264,7 @@ public class GameMechanics implements Tickable, Comparable {
                     if (checkIfPawnDidntStuck(newX, newY, pawn)) {
                         pawnPosition.setX(newX);
 
-                        pawn.movedPerTickX = true;
+                        pawn.setMovedPerTickX(true);
                         //System.out.println("\t" + pawn + ": " + direction);
                     }
                     break;
@@ -273,7 +273,7 @@ public class GameMechanics implements Tickable, Comparable {
                     if (checkIfPawnDidntStuck(newX, newY, pawn)) {
                         pawnPosition.setX(newX);
 
-                        pawn.movedPerTickX = true;
+                        pawn.setMovedPerTickX(true);
                         //System.out.println("\t" + pawn + ": " + direction);
                     }
                     break;
@@ -282,7 +282,7 @@ public class GameMechanics implements Tickable, Comparable {
         }
 
         //pawnRobot();
-
+        updatePlantedBombsTimers(elapsed);
         replica.writeReplica(pawns, bombs, fires, destroyedWoods, Topic.REPLICA);
         cleanAndPrepareForTheNextTick();
     }
@@ -293,8 +293,8 @@ public class GameMechanics implements Tickable, Comparable {
 
         //reinitialize variables for the next tick
         for (Pawn p : pawns) {
-            p.movedPerTickY = false;
-            p.movedPerTickX = false;
+            p.setMovedPerTickY(false);
+            p.setMovedPerTickX(false);
         }
     }
 
