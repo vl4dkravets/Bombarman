@@ -8,8 +8,8 @@ public class Pawn extends GameElement{
     private final String playerName;
     private final String pawnName;
     private Bomb bomb;
-    public boolean movedPerTickX;
-    public boolean movedPerTickY;
+    private boolean movedPerTickX;
+    private boolean movedPerTickY;
     private boolean alive;
     private String direction;
 
@@ -59,5 +59,21 @@ public class Pawn extends GameElement{
 
     public void setDirection(String direction) {
         this.direction = direction;
+    }
+
+    public boolean isMovedPerTickX() {
+        return movedPerTickX;
+    }
+
+    public void setMovedPerTickX(boolean movedPerTickX) {
+        this.movedPerTickX = movedPerTickX;
+    }
+
+    public boolean isMovedPerTickY() {
+        return movedPerTickY;
+    }
+
+    public void setMovedPerTickY(boolean movedPerTickY) {
+        this.movedPerTickY = movedPerTickY;
     }
 }
