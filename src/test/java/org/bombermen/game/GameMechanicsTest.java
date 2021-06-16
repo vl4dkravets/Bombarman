@@ -4,25 +4,17 @@ import org.bombermen.gameElements.*;
 import org.bombermen.message.Message;
 import org.bombermen.message.Topic;
 import org.bombermen.replicas.Replica;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-//@ExtendWith(MockitoExtension.class)
+
 class GameMechanicsTest {
     @Mock
     private GameSession gameSession;
@@ -335,5 +327,12 @@ class GameMechanicsTest {
             assertFalse(pawn.isMovedPerTickX());
             assertFalse(pawn.isMovedPerTickY());
         });
+    }
+
+    @AfterEach
+    void tearDown() {
+        players.clear();
+        players = null;
+        gameMechanics = null;
     }
 }

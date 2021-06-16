@@ -1,5 +1,6 @@
 package org.bombermen.gameElements;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,5 +36,12 @@ class PositionTest {
                 () -> assertEquals(new Position(position1.getX(), position1.getY()+position1.getTileSize()), position2.getTopLeftPoint()),
                 () -> assertEquals(new Position(position2.getX()+position2.getTileSize(), position2.getY()), position1.getBottomRightPoint())
         );
+    }
+
+    @AfterEach
+    void tearDown() {
+        position1 = null;
+        position2 = null;
+        position3 = null;
     }
 }

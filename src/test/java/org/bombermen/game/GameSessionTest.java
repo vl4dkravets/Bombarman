@@ -3,6 +3,7 @@ package org.bombermen.game;
 import org.bombermen.message.Message;
 import org.bombermen.message.Topic;
 import org.bombermen.services.GameService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -20,8 +21,6 @@ class GameSessionTest {
     private GameSession gameSession;
     private String gameId = "gameId1";
     private int numOfPlayers = 2;
-    private Player player1;
-    private Player player2;
     private String player1Name = "player1";
     private String player2Name = "player2";
     private GameService gameService;
@@ -94,4 +93,9 @@ class GameSessionTest {
         assertEquals(0, gameSession.getInputQueue().size());
     }
 
+    @AfterEach
+    void tearDown() {
+        gameSession = null;
+        gameService = null;
+    }
 }

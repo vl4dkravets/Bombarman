@@ -1,5 +1,6 @@
 package org.bombermen.gameElements;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,6 +23,14 @@ class WoodTest {
         wood2 = new Wood(2, position2);
     }
 
+    @AfterEach
+    void tearDown() {
+        position1 = null;
+        position2 = null;
+        wood1 = null;
+        wood2 = null;
+    }
+
     @Test
     void checkState() {
         assertAll(
@@ -39,5 +48,7 @@ class WoodTest {
                 ()->assertEquals(wood2.getBottomRightPoint(), new Position(wood2.getPosition().getX()+wood2.getTileSize()-TILE_SIZE_DIFFERENCE, wood2.getPosition().getY()+TILE_SIZE_DIFFERENCE)),
                 ()->assertNotEquals(wood1.getPosition(), wood2.getPosition())
         );
+
+
     }
 }

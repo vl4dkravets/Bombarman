@@ -1,5 +1,6 @@
 package org.bombermen.game;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,5 +35,11 @@ class PlayerTest {
         player2.setIsConnected(false);
         assertFalse(player1.isConnected());
         assertFalse(player2.isConnected());
+    }
+
+    @AfterEach
+    void tearDown() {
+        player1 = null;
+        player2 = null;
     }
 }

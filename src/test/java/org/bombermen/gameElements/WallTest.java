@@ -1,5 +1,6 @@
 package org.bombermen.gameElements;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,5 +39,13 @@ class WallTest {
                 ()->assertEquals(wall2.getBottomRightPoint(), new Position(wall2.getPosition().getX()+wall2.getTileSize(), wall2.getPosition().getY())),
                 ()->assertNotEquals(wall1.getPosition(), wall2.getPosition())
         );
+    }
+
+    @AfterEach
+    void tearDown() {
+        position1 = null;
+        position2 = null;
+        wall1 = null;
+        wall2 = null;
     }
 }

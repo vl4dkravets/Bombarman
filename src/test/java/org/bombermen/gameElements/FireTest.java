@@ -1,5 +1,6 @@
 package org.bombermen.gameElements;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,5 +33,11 @@ class FireTest {
                 () -> assertTrue(bottomRightCornerOfFire.equals(bottomRightTest)),
                 () -> assertFalse(topLeftTest.equals(bottomRightTest))
                 );
+    }
+
+    @AfterEach
+    void tearDown() {
+        position = null;
+        fire = null;
     }
 }

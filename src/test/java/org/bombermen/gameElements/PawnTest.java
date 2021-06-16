@@ -1,5 +1,6 @@
 package org.bombermen.gameElements;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -75,6 +76,22 @@ class PawnTest {
                 () -> assertEquals(1, pawn1.getId()),
                 () -> assertEquals(2, pawn2.getId())
                 );
+    }
+
+    @AfterEach
+    void tearDown() {
+        direction0 = null;
+        direction1 = null;
+        direction2 = null;
+        playerName0 = null;
+        playerName1 = null;
+        playerName2 = null;
+        pawnName0 = null;
+        pawnName1 = null;
+        pawnName2 = null;
+        pawn0 = null;
+        pawn1 = null;
+        pawn2 = null;
     }
 
 }
