@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.time.Duration;
 import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
@@ -304,6 +306,15 @@ class GameMechanicsTest {
         assertNull(gameMechanics.getFiresLeft());
         assertNull(gameMechanics.getDestroyedWoods());
         assertNull(gameMechanics.getFiresDefaultPositions());
+    }
+
+    @Test
+    void frameTimeNotExceeded() {
+        // The following assertion succeeds.
+        assertTimeout(Duration.ofMillis(FRAME_TIME), () -> {
+            // Perform task that takes less than 1000/60 milliseconds
+            gameMechanics.tick(FRAME_TIME);
+        });
     }
 
     private void bombDidNotExplodeCheck(long tickStartTime) {
