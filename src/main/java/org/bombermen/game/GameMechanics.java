@@ -160,29 +160,33 @@ public class GameMechanics implements Tickable, Comparable {
     }
 
     private void destroy() {
-        pawns.forEach(item -> item = null);
+        pawns.clear();
         pawns = null;
 
-        walls.forEach(item -> item = null);
+        walls.clear();
         walls = null;
 
-        woods.forEach(item -> item = null);
+        woods.clear();
         woods = null;
 
-        bombs.forEach(item -> item = null);
+        bombs.clear();
         bombs = null;
 
-        firesLeft.forEach(item -> item = null);
+        firesLeft.clear();
         firesLeft = null;
 
-        destroyedWoods.forEach(item -> item = null);
+        fires.clear();
+        fires = null;
+
+        destroyedWoods.clear();
         destroyedWoods = null;
 
-        firesDefaultPositions.forEach(item -> item = null);
+        firesDefaultPositions.clear();
         firesDefaultPositions = null;
 
         gameSession = null;
         replica = null;
+        deadPawns.clear();
         deadPawns = null;
     }
 
@@ -190,7 +194,6 @@ public class GameMechanics implements Tickable, Comparable {
     public void tick(long elapsed) {
         if(isGameFinished) {
             destroy();
-            deadPawns.clear();
             return;
         }
         if (deadPawns.size() > 0) {
