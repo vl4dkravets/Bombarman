@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class Broker {
     //private static final Logger log = LoggerFactory.getLogger(Broker.class);
-    private static final Broker instance = new Broker();
+    private static Broker instance;
     private final ConnectionPool connectionPool;
     private final GameService gameService;
 
@@ -45,7 +45,21 @@ public class Broker {
         return query.substring(query.indexOf("=")+1, query.indexOf("&"));
     }
 
-    public static Broker getInstance() {
+    public static Broker getInstance()
+    {
+        if (instance == null)
+        {
+            //synchronized block to remove overhead
+            synchronized (Broker.class)
+            {
+                if(instance==null)
+                {
+                    // if instance is null, initialize
+                    instance = new Broker();
+                }
+
+            }
+        }
         return instance;
     }
 }

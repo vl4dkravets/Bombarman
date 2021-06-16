@@ -4,6 +4,7 @@ import org.bombermen.exceptions.InvalidGameIdException;
 import org.bombermen.game.GameSession;
 import org.bombermen.game.GameThread;
 import org.bombermen.game.Player;
+import org.bombermen.network.Broker;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameService {
 
-	private static final GameService gameService = new GameService();
+	private static GameService gameService;
 
 	private static final int MAX_N_OF_PLAYERS = 2;
 	private final ConcurrentHashMap<String, GameSession> games;
@@ -73,8 +74,6 @@ public class GameService {
 		return games;
 	}
 
-	public static GameService getInstance() {return gameService;}
-
 	public boolean haveAllThePlayersDisconnectedFromGame(String playerID) {
 
 		for(GameSession gs: games.values()) {
@@ -105,6 +104,24 @@ public class GameService {
 			}
 		}
 		return true;
+	}
+
+	public static GameService getInstance()
+	{
+		if (gameService == null)
+		{
+			//synchronized block to remove overhead
+			synchronized (GameService.class)
+			{
+				if(gameService==null)
+				{
+					// if instance is null, initialize
+					gameService = new GameService();
+				}
+
+			}
+		}
+		return gameService;
 	}
 
 }

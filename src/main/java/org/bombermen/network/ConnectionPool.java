@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConnectionPool {
     private static final Logger log = LoggerFactory.getLogger(ConnectionPool.class);
-    private static final ConnectionPool instance = new ConnectionPool();
+    private static ConnectionPool instance;
     private final int PARALLELISM_LEVEL;
     private final AtomicInteger playerNumber;
     private final ConcurrentHashMap<WebSocketSession, String> pool;
@@ -82,6 +82,16 @@ public class ConnectionPool {
     }
 
     public static ConnectionPool getInstance() {
+        if (instance == null) {
+            //synchronized block to remove overhead
+            synchronized (ConnectionPool.class) {
+                if (instance == null) {
+                    // if instance is null, initialize
+                    instance = new ConnectionPool();
+                }
+
+            }
+        }
         return instance;
     }
 }
