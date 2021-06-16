@@ -256,13 +256,62 @@ class GameMechanicsTest {
     }
 
     @Test
-    void tickTestBombExplodes() {
+    void tickTestBombExplodesAfter10SecondsAndKillsAllPawns() {
+        //before
+        assertEquals(2, gameMechanics.getBombs().size());
+        ArrayList<Pawn> pawns = gameMechanics.getPawns();
+        assertEquals(2, pawns.size());
+        assertTrue(pawns.get(0).isAlive());
+        assertTrue(pawns.get(1).isAlive());
+
+
+        long counter = 0;
+        while(counter <= bombTimer) {
+            gameMechanics.tick(FRAME_TIME);
+            counter+=FRAME_TIME;
+        }
+        // after 10 sec
+        assertEquals(0, gameMechanics.getBombs().size());
+        assertFalse(pawns.get(0).isAlive());
+        assertFalse(pawns.get(1).isAlive());
+        assertEquals(pawns, gameMechanics.getDeadPawns());
+    }
+
+
+
+    @Test
+    void tickTestGameOver() {
+        ArrayList<Pawn> pawns = gameMechanics.getPawns();
+        ArrayList<Pawn> deadPawns = gameMechanics.getDeadPawns();
+
+        //before
+        assertEquals(2, pawns.size());
+        assertEquals(0, deadPawns.size());
+
+        deadPawns.add(pawns.get(0));
+
+        while(gameMechanics.getGAME_END_PAUSE() >= 0) {
+            gameMechanics.tick(FRAME_TIME);
+        }
+
+        assertTrue(gameMechanics.isGameFinished());
 
     }
 
     @Test
-    void tickTestGameOver() {
-
+    void tickDestroy() {
+        tickTestGameOver();
+        gameMechanics.tick(FRAME_TIME);
+        assertNull(gameMechanics.getDeadPawns());
+        assertNull(gameMechanics.getPawns());
+        assertNull(gameMechanics.getBombs());
+        assertNull(gameMechanics.getFires());
+        assertNull(gameMechanics.getFiresLeft());
+        assertNull(gameMechanics.getWalls());
+        assertNull(gameMechanics.getWoods());
+        assertNull(gameMechanics.getFiresLeft());
+        assertNull(gameMechanics.getDestroyedWoods());
+        assertNull(gameMechanics.getFiresDefaultPositions());
     }
 
     private void bombDidNotExplodeCheck(long tickStartTime) {
