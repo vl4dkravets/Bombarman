@@ -1,6 +1,7 @@
 package org.bombermen.game;
 
 import org.bombermen.gameElements.*;
+import org.bombermen.message.Message;
 import org.bombermen.message.Topic;
 import org.bombermen.replicas.Replica;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,8 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
@@ -29,6 +32,10 @@ class GameMechanicsTest {
 
     private ArrayList<Player> players;
 
+    private long FRAME_TIME;
+    private int bombTimer;
+    private int gameEndingPause;
+
 
     @BeforeEach
     void setUp() {
@@ -40,6 +47,9 @@ class GameMechanicsTest {
         when(gameSession.getPlayersAsIterator()).thenReturn(players.iterator());
         when(gameSession.getMAX_N_OF_PLAYERS()).thenReturn(2);
         gameMechanics = new GameMechanics(gameSession, replica);
+        FRAME_TIME = 1000/60;
+        bombTimer = 10_000;
+        gameEndingPause = 3000;
     }
 
     @Test
@@ -146,13 +156,116 @@ class GameMechanicsTest {
 
     @Test
     void tickTest() {
-        long FRAME_TIME = 1000/60;
-        long bombTimer = 10_000;
-        int gameEndingPause = 3000;
+        long tickStartTime = System.currentTimeMillis();
+        gameMechanics.tick(FRAME_TIME);
+        bombDidNotExplodeCheck(tickStartTime);
+        //there was no bombs planted yet
+        assertEquals(2, gameMechanics.getBombs().size());
+
+        //there was not messages - so no movement
+        gameMechanics.getPawns().forEach(pawn -> {
+            assertFalse(pawn.isMovedPerTickX());
+            assertFalse(pawn.isMovedPerTickY());
+        });
+
+        //check there was no movement among pawns - positions should be original
+        assertEquals(gameMechanics.getPawns().get(0).getPosition(), new Position(gameMechanics.getTILE_SIZE(), gameMechanics.getTILE_SIZE()));
+        assertEquals(gameMechanics.getPawns().get(1).getPosition(), new Position(gameMechanics.getGAME_FIELD_W()-gameMechanics.getTILE_SIZE(), gameMechanics.getGAME_FIELD_H()-gameMechanics.getTILE_SIZE()));
+
+        cleanAndPrepareForTheNextTickTest();
+    }
+
+    @Test
+    void tickTestMoveMessage_Stuck() throws InterruptedException {
+        //create & push a message
+        Topic topic = Topic.MOVE;
+        String data = "{\"direction\":\"LEFT\"}";
+        String playerName = players.get(0).getName();
+        Message message = new Message(topic, data);
+        message.setPlayerName(playerName);
+        //gameSession.pushMessage(message);
+        ArrayList<Message> messages = new ArrayList<>();
+        messages.add(message);
+        when(gameSession.getInputQueue()).thenReturn(messages);
+
+        long tickStartTime = System.currentTimeMillis();
+
+        gameMechanics.tick(FRAME_TIME);
+        bombDidNotExplodeCheck(tickStartTime);
+
+        ArrayList<Pawn> pawns = gameMechanics.getPawns();
+        //there was no bombs planted yet
+        assertEquals(2, gameMechanics.getBombs().size());
+        Pawn pawn = pawns.get(0);
+        //pawn stuck & didn't move
+        assertNotEquals(new Position(gameMechanics.getTILE_SIZE()-gameMechanics.getPawnStepSize(), gameMechanics.getTILE_SIZE()), pawn.getPosition());
+        assertEquals(new Position(gameMechanics.getTILE_SIZE(), gameMechanics.getTILE_SIZE()), pawn.getPosition());
+        assertFalse(pawn.isMovedPerTickX());
+        assertEquals("LEFT", pawn.getDirection());
+        cleanAndPrepareForTheNextTickTest();
+    }
+
+    @Test
+    void tickTestMoveMessage_DoNotStuck() throws InterruptedException {
+        //create & push a message
+        Topic topic = Topic.MOVE;
+        String data = "{\"direction\":\"RIGHT\"}";
+        String playerName = players.get(0).getName();
+        Message message = new Message(topic, data);
+        message.setPlayerName(playerName);
+        ArrayList<Message> messages = new ArrayList<>();
+        messages.add(message);
+        when(gameSession.getInputQueue()).thenReturn(messages);
 
         long tickStartTime = System.currentTimeMillis();
         gameMechanics.tick(FRAME_TIME);
-        // tick() finishes in one tick frame
+        bombDidNotExplodeCheck(tickStartTime);
+
+        ArrayList<Pawn> pawns = gameMechanics.getPawns();
+        Pawn pawn = pawns.get(0);
+        //there was no bombs planted yet
+        assertEquals(2, gameMechanics.getBombs().size());
+        //pawn stuck & didn't move
+        assertEquals(new Position(gameMechanics.getTILE_SIZE()+gameMechanics.getPawnStepSize(), gameMechanics.getTILE_SIZE()), pawn.getPosition());
+        assertEquals("RIGHT", pawn.getDirection());
+        cleanAndPrepareForTheNextTickTest();
+    }
+
+    @Test
+    void tickTestPlantBombMessage() {
+        //create & push a message
+        Topic topic = Topic.PLANT_BOMB;
+        String playerName = players.get(0).getName();
+        Message message = new Message(topic, "");
+        message.setPlayerName(playerName);
+        ArrayList<Message> messages = new ArrayList<>();
+        messages.add(message);
+        when(gameSession.getInputQueue()).thenReturn(messages);
+
+        long tickStartTime = System.currentTimeMillis();
+        gameMechanics.tick(FRAME_TIME);
+        bombDidNotExplodeCheck(tickStartTime);
+
+        ArrayList<Bomb> bombs = gameMechanics.getBombs();
+        Bomb newBomb = bombs.get(2);
+        assertEquals(3, bombs.size());
+        assertNotSame(newBomb.getPosition().hashCode(), gameMechanics.getPawns().get(0).getPosition().hashCode());
+        assertEquals(bombTimer-FRAME_TIME, newBomb.getBombTimer());
+
+        cleanAndPrepareForTheNextTickTest();
+    }
+
+    @Test
+    void tickTestBombExplodes() {
+
+    }
+
+    @Test
+    void tickTestGameOver() {
+
+    }
+
+    private void bombDidNotExplodeCheck(long tickStartTime) {
         assertTrue(System.currentTimeMillis()-tickStartTime<FRAME_TIME);
         //isGameFinished wasn't touched - meaning the game isn't over
         assertFalse(gameMechanics.isGameFinished());
@@ -160,48 +273,18 @@ class GameMechanicsTest {
         assertEquals(0, gameMechanics.getDeadPawns().size());
         //gameEndingPause wasn't decremented - meaning the game isn't over
         assertEquals(gameEndingPause, gameMechanics.getGAME_END_PAUSE());
-        //there was no bombs planted yet
-        assertEquals(2, gameMechanics.getBombs().size());
+
         //bombs timers updated/decremented per one tick
         assertEquals(bombTimer-FRAME_TIME, gameMechanics.getBombs().get(0).getBombTimer());
         assertEquals(bombTimer-FRAME_TIME, gameMechanics.getBombs().get(1).getBombTimer());
+    }
 
-        //there was not messages - so no movement
-        gameMechanics.getPawns().forEach(pawn -> {
-            assertFalse(pawn.movedPerTickX);
-            assertFalse(pawn.movedPerTickY);
-        });
-
-        //check there was no movement among pawns - positions should be original
-        assertEquals(gameMechanics.getPawns().get(0).getPosition(), new Position(gameMechanics.getTILE_SIZE(), gameMechanics.getTILE_SIZE()));
-        assertEquals(gameMechanics.getPawns().get(1).getPosition(), new Position(gameMechanics.getGAME_FIELD_W()-gameMechanics.getTILE_SIZE(), gameMechanics.getGAME_FIELD_H()-gameMechanics.getTILE_SIZE()));
-
+    private void cleanAndPrepareForTheNextTickTest() {
         assertEquals(0, gameMechanics.getDestroyedWoods().size());
         assertEquals(0, gameMechanics.getFires().size());
-    }
-
-    @Test
-    void tickTestMoveMessage_Stuck() {
-
-    }
-
-    @Test
-    void tickTestMoveMessage_DoNotStuck() {
-
-    }
-
-    @Test
-    void tickTestPlantBombMessage() {
-
-    }
-
-    @Test
-    void tickTestBombExlodes() {
-
-    }
-
-    @Test
-    void tickTestGameOver() {
-
+        gameMechanics.getPawns().forEach(pawn -> {
+            assertFalse(pawn.isMovedPerTickX());
+            assertFalse(pawn.isMovedPerTickY());
+        });
     }
 }
