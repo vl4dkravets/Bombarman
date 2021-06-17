@@ -94,4 +94,8 @@ public class ConnectionPool {
         }
         return instance;
     }
+
+    public ConcurrentHashMap<WebSocketSession, String> getPool() {
+        return pool;
+    }
 }
