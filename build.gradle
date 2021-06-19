@@ -2,7 +2,9 @@ plugins {
     id 'org.springframework.boot' version '2.4.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'jacoco'
 }
+
 
 group = 'org.bombermen'
 version = '0.0.1-SNAPSHOT'
@@ -47,9 +49,6 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    // https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin
-    implementation group: 'org.jacoco', name: 'jacoco-maven-plugin', version: '0.8.7'
-
 
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit', module: 'junit'
@@ -66,4 +65,27 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+subprojects {
+    test.useJUnit()
+}
+
+task codeCoverageReport(type: JacocoReport) {
+    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
+
+    subprojects.each {
+        sourceSets it.sourceSets.main
+    }
+
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/jacoco/report.xml")
+        html.enabled false
+        csv.enabled false
+    }
+}
+
+codeCoverageReport.dependsOn {
+    subprojects*.test
 }
