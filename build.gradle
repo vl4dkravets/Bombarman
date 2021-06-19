@@ -47,6 +47,10 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    // https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin
+    implementation group: 'org.jacoco', name: 'jacoco-maven-plugin', version: '0.8.7'
+
+
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit', module: 'junit'
     }
