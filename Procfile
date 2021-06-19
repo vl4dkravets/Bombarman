@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -jar target/*.jar
+web: java $JAVA_OPTS -cp target/classes:target/dependency/* org/bombermen/GameServerApp.java
