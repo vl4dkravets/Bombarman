@@ -20,8 +20,6 @@ public class MatchMakerController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     public String getGameId(@RequestParam HashMap<String, String> data){
-        //logger.info("In controller1");
-        //System.out.println("In controller1");
         String gameID = gameService.create(data.get("name"));
 
         return gameID;
