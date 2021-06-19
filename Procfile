@@ -1,1 +1,1 @@
-web: java -jar target/GameServer1-0.0.1-SNAPSHOT.jar $PORT
+web: java -Dserver.port=$PORT -jar target/*.jar
