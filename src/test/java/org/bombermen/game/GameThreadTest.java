@@ -50,11 +50,11 @@ class GameThreadTest {
         assertNotNull(gameMechanics);
     }
 
-    @Test
-    void runTest(){
-        thread.start();
-        thread.interrupt();
-    }
+//    @Test
+//    void runTest(){
+//        thread.start();
+//        thread.interrupt();
+//    }
 
     @AfterEach
     void tearDown() {
