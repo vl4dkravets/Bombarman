@@ -9,3 +9,5 @@
 * Follows pricnciples of CI & CD via GitHub Actions
 * The game is deployed on Heroku server
 
+![deepin-screen-recorder_Select area_20210620194005](https://user-images.githubusercontent.com/47478584/122691737-813c2400-d1ff-11eb-90fd-1f8d857d4402.gif)
+
