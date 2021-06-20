@@ -2,7 +2,6 @@ plugins {
     id 'org.springframework.boot' version '2.4.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
-    id 'jacoco'
 }
 
 
@@ -65,27 +64,4 @@ dependencies {
 
 test {
     useJUnitPlatform()
-}
-
-subprojects {
-    test.useJUnit()
-}
-
-task codeCoverageReport(type: JacocoReport) {
-    executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-
-    subprojects.each {
-        sourceSets it.sourceSets.main
-    }
-
-    reports {
-        xml.enabled true
-        xml.destination file("${buildDir}/reports/jacoco/report.xml")
-        html.enabled false
-        csv.enabled false
-    }
-}
-
-codeCoverageReport.dependsOn {
-    subprojects*.test
 }
