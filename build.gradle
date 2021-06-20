@@ -62,6 +62,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
@@ -69,6 +70,5 @@ jacocoTestReport {
         xml.enabled true
         html.enabled false
     }
+    dependsOn test // tests are required to run before generating the report
 }
-
-check.dependsOn jacocoTestReport
