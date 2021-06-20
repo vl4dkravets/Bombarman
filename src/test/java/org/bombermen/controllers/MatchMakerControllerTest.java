@@ -28,11 +28,13 @@ class MatchMakerControllerTest {
 
     @AfterEach
     void tearDown() {
+        gameService.getGames().clear();
         gameService = null;
+        mockMvc = null;
     }
 
     @Test
-    void getGameId() throws Exception {
+    void getGameIdTest() throws Exception {
         String url = "/matchmaker/join";
         String param = "name=";
         String attribute = "test123";

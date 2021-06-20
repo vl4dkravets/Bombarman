@@ -19,10 +19,10 @@ public class GameService {
 
 	private static final int MAX_N_OF_PLAYERS = 2;
 	private final ConcurrentHashMap<String, GameSession> games;
-	private final AtomicInteger playersConnectedToLastCreatedSession;
-	private final AtomicInteger gameSessionCounter;
+	private AtomicInteger playersConnectedToLastCreatedSession;
+	private AtomicInteger gameSessionCounter;
 	private String lastCreateGameID;
-	private ArrayList<GameThread> gameThreads = new ArrayList<>();
+	//private ArrayList<GameThread> gameThreads = new ArrayList<>();
 	
 	private GameService() {
 		games = new ConcurrentHashMap<>();
@@ -124,4 +124,15 @@ public class GameService {
 		return gameService;
 	}
 
+	public void setLastCreateGameID(String lastCreateGameID) {
+		this.lastCreateGameID = lastCreateGameID;
+	}
+
+	public void setPlayersConnectedToLastCreatedSession(int i) {
+		playersConnectedToLastCreatedSession.set(i);
+	}
+
+	public void setGameSessionCounter(int i) {
+		gameSessionCounter.set(i);
+	}
 }

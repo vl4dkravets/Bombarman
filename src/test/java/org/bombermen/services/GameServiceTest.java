@@ -5,6 +5,7 @@ import org.bombermen.game.GameSession;
 import org.bombermen.game.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -30,6 +31,9 @@ class GameServiceTest {
     @AfterEach
     void tearDown() {
         gameService.getGames().clear();
+        gameService.setLastCreateGameID(null);
+        gameService.setGameSessionCounter(0);
+        gameService.setPlayersConnectedToLastCreatedSession(0);
         gameService = null;
     }
 
