@@ -4,6 +4,10 @@ os: linux
 dist: trusty
 jdk: oraclejdk8
 
+env:
+  global:
+    - CODECOV_TOKEN=ad9b7de1-7472-44d3-8017-d298fce9b3aa
+
 before_script:
   - chmod +x gradlew
 script:
