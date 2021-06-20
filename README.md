@@ -2,4 +2,10 @@
 [![codecov](https://codecov.io/gh/vl4dkravets/Bomberman/branch/main/graph/badge.svg?token=XDEE92SBJK)](https://codecov.io/gh/vl4dkravets/Bomberman)
 
 # Bomberman
-Multithreaded &amp; multiplayer HTML5 game, where a player has 10 seconds to drop a bomb before it explodes
+* Multiplayer, online HTML video game
+* Multithreaded backend, which supports multiple live games on a server
+* The code is covered with unit tests for further maintainability
+* Uses websocket connection to provide 60 frames per second
+* Follows pricnciples of CI & CD via GitHub Actions
+* The game is deployed on Heroku server
+
