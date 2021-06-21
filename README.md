@@ -5,8 +5,8 @@
 * Multiplayer, online HTML video game
 * Multithreaded backend, which supports multiple live games on a server
 * The code is covered with unit tests for further maintainability
-* Uses websocket connection to provide 60 frames per second
-* Follows pricnciples of CI & CD via GitHub Actions
+* Uses WebSocket protocol to provide 60 frames per second
+* Follows principles of CI & CD via GitHub Actions
 * The game is deployed on Heroku server
 
 # Follow the link: https://bomberman-by-vlad.herokuapp.com
